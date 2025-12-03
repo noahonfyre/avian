@@ -23,9 +23,8 @@ class Statistics(tk.Frame):
             sticky="nsew"
         )
 
+        self.speed_display_var = tk.StringVar()
+        self.speed_display_var.set(f"{str(1)} | {str(2)}")
+
         self.speed_display = tk.Label(self.speed_display_wrapper, text="Hallo")
         self.speed_display.pack(anchor="e")
-        
-        download_speed_var = tk.StringVar(str(20))
-        download_speed = tk.Label(self.speed_display, text_variable=download_speed_var)
-        
