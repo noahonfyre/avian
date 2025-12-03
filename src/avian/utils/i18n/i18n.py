@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
-from src.avian.common.i18n.translations import Translations
+from src.avian.utils.i18n.translations import Translations
 
 
 class I18n:

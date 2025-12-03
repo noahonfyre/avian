@@ -1,15 +1,15 @@
 import tkinter as tk
-from multiprocessing import Queue
 from typing import Callable
 
 from src.avian.gui.menubar import Menubar
+from src.avian.models.app_context import AppContext
 
 
 class App(tk.Tk):
-    def __init__(self, q: Queue) -> None:
+    def __init__(self, ctx: AppContext) -> None:
         super().__init__()
 
-        self.q = q
+        self.ctx = ctx
         self.message = tk.StringVar()
 
         self.title("Avian - Peer-to-peer file transfers")
@@ -28,6 +28,7 @@ class App(tk.Tk):
         self.entry.pack()
 
     def handle_close(self) -> None:
+        self.ctx.termination_event.set()
         self.destroy()
 
     def schedule(self, repeat_ms: int, func: Callable, *args) -> None:
@@ -39,9 +40,9 @@ class App(tk.Tk):
 
 
     def poll(self) -> None:
-        if self.q.empty():
+        if self.ctx.chan.empty():
             return
 
-        message = self.q.get()["type"]
+        message = self.ctx.chan.get()["type"]
         if message:
             self.message.set(message)
