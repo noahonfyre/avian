@@ -5,6 +5,8 @@
 
 
 import tkinter as tk
+
+from gui.views.sidebar import Sidebar
 gui = tk.Tk()
 gui.title("Avian - Peer-to-peer file transfers")
 gui.geometry("900x500")
@@ -14,7 +16,9 @@ gui.rowconfigure(1)
 gui.columnconfigure(0, weight=1)
 gui.columnconfigure(1, weight=4)
 
-sidebar = tk.Frame(gui, bg="#000000")
+# tk.Frame(gui, bg="#000000")
+
+sidebar = Sidebar(gui)
 sidebar.grid(
     row=0, 
     column=0,
