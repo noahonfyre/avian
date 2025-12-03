@@ -18,33 +18,33 @@ class App(tk.Tk):
 
         # tk.Frame(gui, bg="#000000")
 
-        sidebar = Sidebar(self)
-        sidebar.grid(
+        self.sidebar = Sidebar(self)
+        self.sidebar.grid(
             row=0,
             column=0,
             sticky="nsew"
 
         )
-        mainframe = tk.Frame(self, bg="gray")
-        mainframe.grid(
+        self.mainframe = tk.Frame(self, bg="gray")
+        self.mainframe.grid(
             row=0,
             column=1,
             sticky="nsew"
 
         )
-        statistics = tk.Frame(self, bg="blue", height=50)
-        statistics.grid(
+        self.statistics = tk.Frame(self, bg="blue", height=50)
+        self.statistics.grid(
             row=1,
             column=0,
             columnspan=2,
             sticky="nsew"
         )
 
-        statistics.rowconfigure(0)
-        statistics.columnconfigure(0, weight=1)
-        statistics.columnconfigure(1, weight=1)
+        self.statistics.rowconfigure(0)
+        self.statistics.columnconfigure(0, weight=1)
+        self.statistics.columnconfigure(1, weight=1)
 
-        active_connections_wrapper = tk.Frame(statistics, bg="red")
+        active_connections_wrapper = tk.Frame(self.statistics, bg="red")
         active_connections_wrapper.grid(
             row=0,
             column=0,
@@ -53,7 +53,7 @@ class App(tk.Tk):
         active_connections = tk.Label(active_connections_wrapper, text="Hallo")
         active_connections.pack(anchor="w")
 
-        speed_display_wrapper = tk.Frame(statistics, bg="green")
+        speed_display_wrapper = tk.Frame(self.statistics, bg="green")
         speed_display_wrapper.grid(
             row=0,
             column=1,
