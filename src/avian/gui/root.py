@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from src.avian.gui.views.statistics import Statistics
 from src.avian.gui.views.sidebar import Sidebar
 from src.avian.models.app_context import AppContext
 
@@ -32,7 +33,7 @@ class App(tk.Tk):
             sticky="nsew"
 
         )
-        self.statistics = tk.Frame(self, bg="blue", height=50)
+        self.statistics = Statistics(self, ctx)
         self.statistics.grid(
             row=1,
             column=0,
@@ -40,30 +41,6 @@ class App(tk.Tk):
             sticky="nsew"
         )
 
-        self.statistics.rowconfigure(0)
-        self.statistics.columnconfigure(0, weight=1)
-        self.statistics.columnconfigure(1, weight=1)
-
-        active_connections_wrapper = tk.Frame(self.statistics, bg="red")
-        active_connections_wrapper.grid(
-            row=0,
-            column=0,
-            sticky="nsew"
-        )
-        active_connections = tk.Label(active_connections_wrapper, text="Hallo")
-        active_connections.pack(anchor="w")
-
-        speed_display_wrapper = tk.Frame(self.statistics, bg="green")
-        speed_display_wrapper.grid(
-            row=0,
-            column=1,
-            sticky="nsew"
-        )
-
-        speed_display = tk.Label(speed_display_wrapper, text="Hallo")
-        speed_display.pack(anchor="e")
-
-        self.mainloop()
 
     def handle_close(self) -> None:
         self.ctx.termination_event.set()
