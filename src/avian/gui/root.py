@@ -1,48 +1,70 @@
 import tkinter as tk
-from typing import Callable
 
-from src.avian.gui.menubar import Menubar
+from src.avian.gui.views.sidebar import Sidebar
 from src.avian.models.app_context import AppContext
 
 
 class App(tk.Tk):
     def __init__(self, ctx: AppContext) -> None:
         super().__init__()
-
         self.ctx = ctx
-        self.message = tk.StringVar()
-
         self.title("Avian - Peer-to-peer file transfers")
-        self.geometry("1200x600")
-        self.minsize(1200, 600)
+        self.geometry("900x500")
+        self.minsize(1200, 650)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=4)
 
-        self.protocol("WM_DELETE_WINDOW", self.handle_close)
-        self.config(menu=Menubar(self))
+        # tk.Frame(gui, bg="#000000")
 
-        self.button = tk.Button(self, textvariable=self.message)
-        self.button.pack()
+        self.sidebar = Sidebar(self)
+        self.sidebar.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
 
-        self.schedule(250, self.poll)
+        )
+        self.mainframe = tk.Frame(self, bg="gray")
+        self.mainframe.grid(
+            row=0,
+            column=1,
+            sticky="nsew"
 
-        self.entry = tk.Entry()
-        self.entry.pack()
+        )
+        self.statistics = tk.Frame(self, bg="blue", height=50)
+        self.statistics.grid(
+            row=1,
+            column=0,
+            columnspan=2,
+            sticky="nsew"
+        )
+
+        self.statistics.rowconfigure(0)
+        self.statistics.columnconfigure(0, weight=1)
+        self.statistics.columnconfigure(1, weight=1)
+
+        active_connections_wrapper = tk.Frame(self.statistics, bg="red")
+        active_connections_wrapper.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+        active_connections = tk.Label(active_connections_wrapper, text="Hallo")
+        active_connections.pack(anchor="w")
+
+        speed_display_wrapper = tk.Frame(self.statistics, bg="green")
+        speed_display_wrapper.grid(
+            row=0,
+            column=1,
+            sticky="nsew"
+        )
+
+        speed_display = tk.Label(speed_display_wrapper, text="Hallo")
+        speed_display.pack(anchor="e")
+
+        self.mainloop()
 
     def handle_close(self) -> None:
         self.ctx.termination_event.set()
         self.destroy()
-
-    def schedule(self, repeat_ms: int, func: Callable, *args) -> None:
-        def wrapper(*wrapper_args):
-            func(*wrapper_args)
-            self.after(repeat_ms, wrapper, *wrapper_args)
-
-        self.after(repeat_ms, wrapper, *args)
-
-
-    def poll(self) -> None:
-        if self.ctx.chan.empty():
-            return
-
-        message = self.ctx.chan.get()["type"]
-        if message:
-            self.message.set(message)
