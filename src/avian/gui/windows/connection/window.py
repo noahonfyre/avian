@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
+import tkinter.filedialog as fd
+from tkinter.messagebox import showinfo
+
 
 class ConnectionWindow(tk.Toplevel):
     def __init__(self, parent):
@@ -21,20 +24,15 @@ class ConnectionWindow(tk.Toplevel):
         self.attachment_wrapper = tk.Frame(self)
         self.attachment_wrapper.grid(row=0, column=0, sticky="nsew")
         self.attachment_wrapper.columnconfigure(0, weight=1)
+        self.attachment_wrapper.columnconfigure(1)
         self.attachment_wrapper.rowconfigure(0, weight=1)
-        self.attachment_wrapper.rowconfigure(1)
-
-        self.file_list_wrapper = tk.Frame(self)
-        self.file_list_wrapper.grid(row=0, column=0, sticky="nsew")
-        self.file_list_wrapper.columnconfigure(0, weight=1)
-        self.file_list_wrapper.columnconfigure(1)
 
         self.file_list = ttk.Treeview(self.attachment_wrapper)
-        self.file_list.grid(row=0, column=0, sticky="nsw")
+        self.file_list.grid(row=0, column=0, sticky="nsew")
 
-        self.file_list_scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.file_list.yview)
+        self.file_list_scrollbar = ttk.Scrollbar(self.attachment_wrapper, orient="vertical", command=self.file_list.yview)
         self.file_list.configure(yscrollcommand=self.file_list_scrollbar.set)
-        self.file_list_scrollbar.grid(row=0, column=1, sticky="nse")
+        self.file_list_scrollbar.grid(row=0, column=1, sticky="nsew")
 
         self.compose_wrapper = ttk.LabelFrame(self, text="Peer", padding=(10, 5, 10, 10))
         self.compose_wrapper.grid(row=0, column=1, padx=(10, 0), sticky="new")
@@ -54,7 +52,7 @@ class ConnectionWindow(tk.Toplevel):
         self.file_pane = ttk.Frame(self)
         self.file_pane.grid(column=0, row=1, pady=5, sticky="nsw")
 
-        self.add_button = ttk.Button(self.file_pane, text="Add")
+        self.add_button = ttk.Button(self.file_pane, text="Add", command=self.select_file)
         self.add_button.grid(column=0, row=0, sticky="w")
 
         self.remove_button = ttk.Button(self.file_pane, text="Remove", state=tk.DISABLED)
@@ -68,6 +66,16 @@ class ConnectionWindow(tk.Toplevel):
 
         self.connect_button = ttk.Button(self.action_pane, text="Connect")
         self.connect_button.grid(column=1, row=0, sticky="e")
+
+
+    @staticmethod
+    def select_file():
+        filetypes = {
+            ("All files", "*.*")
+        }
+        filename = fd.askopenfilenames(title="Add files", filetypes=filetypes)
+        showinfo(title="This shouldn't be in prod", message=", ".join(filename))
+
 
     def close(self):
         self.destroy()
