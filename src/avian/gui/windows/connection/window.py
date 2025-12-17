@@ -1,0 +1,73 @@
+import tkinter as tk
+from tkinter import ttk
+
+
+class ConnectionWindow(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Initiate transaction")
+        self.geometry("600x350")
+        self.minsize(600, 350)
+        self.transient(parent)
+        self.grab_set()
+
+        self.configure(padx=10, pady=5)
+
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1)
+
+        self.attachment_wrapper = tk.Frame(self)
+        self.attachment_wrapper.grid(row=0, column=0, sticky="nsew")
+        self.attachment_wrapper.columnconfigure(0, weight=1)
+        self.attachment_wrapper.rowconfigure(0, weight=1)
+        self.attachment_wrapper.rowconfigure(1)
+
+        self.file_list_wrapper = tk.Frame(self)
+        self.file_list_wrapper.grid(row=0, column=0, sticky="nsew")
+        self.file_list_wrapper.columnconfigure(0, weight=1)
+        self.file_list_wrapper.columnconfigure(1)
+
+        self.file_list = ttk.Treeview(self.attachment_wrapper)
+        self.file_list.grid(row=0, column=0, sticky="nsw")
+
+        self.file_list_scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.file_list.yview)
+        self.file_list.configure(yscrollcommand=self.file_list_scrollbar.set)
+        self.file_list_scrollbar.grid(row=0, column=1, sticky="nse")
+
+        self.compose_wrapper = ttk.LabelFrame(self, text="Peer", padding=(10, 5, 10, 10))
+        self.compose_wrapper.grid(row=0, column=1, padx=(10, 0), sticky="new")
+        self.compose_wrapper.columnconfigure(0, weight=1)
+        self.compose_wrapper.columnconfigure(1, weight=1)
+
+        ttk.Label(self.compose_wrapper, text="Peer address").grid(row=0, column=0, sticky="w")
+        self.target_address = tk.StringVar()
+        self.target_address_entry = ttk.Entry(self.compose_wrapper, textvariable=self.target_address)
+        self.target_address_entry.grid(row=1, column=0, sticky="nsew")
+
+        ttk.Label(self.compose_wrapper, text="Peer port").grid(row=0, column=1, sticky="w")
+        self.target_port = tk.IntVar(value=9250)
+        self.target_port_entry = ttk.Spinbox(self.compose_wrapper, from_=1, to=65536, textvariable=self.target_port)
+        self.target_port_entry.grid(row=1, column=1, sticky="nsew")
+
+        self.file_pane = ttk.Frame(self)
+        self.file_pane.grid(column=0, row=1, pady=5, sticky="nsw")
+
+        self.add_button = ttk.Button(self.file_pane, text="Add")
+        self.add_button.grid(column=0, row=0, sticky="w")
+
+        self.remove_button = ttk.Button(self.file_pane, text="Remove", state=tk.DISABLED)
+        self.remove_button.grid(column=1, row=0, sticky="w")
+
+        self.action_pane = ttk.Frame(self)
+        self.action_pane.grid(column=1, row=1, pady=5, sticky="nse")
+
+        self.cancel_button = ttk.Button(self.action_pane, text="Cancel", command=self.close)
+        self.cancel_button.grid(column=0, row=0, sticky="e")
+
+        self.connect_button = ttk.Button(self.action_pane, text="Connect")
+        self.connect_button.grid(column=1, row=0, sticky="e")
+
+    def close(self):
+        self.destroy()

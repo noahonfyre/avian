@@ -2,8 +2,8 @@ import socket
 import struct
 import time
 from pathlib import Path
+from typing import Generator
 
-from src.avian.models.transfer_stat_link import TransferStatLink
 from src.avian.models.app_context import AppContext
 from src.avian.network import packets
 
