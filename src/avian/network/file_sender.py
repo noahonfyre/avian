@@ -3,8 +3,6 @@ import struct
 import time
 from pathlib import Path
 from queue import Queue
-
-from src.avian.models.transfer_stat_link import TransferStatLink
 from src.avian.network import packets
 
 
