@@ -7,6 +7,8 @@ class DynamicTemplate(tk.StringVar):
         self.template = template
         self.args = args
 
+        self.update()
+
         for a in args:
             a.trace_add("write", self.update)
 
