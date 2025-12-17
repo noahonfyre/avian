@@ -11,15 +11,14 @@ class Sidebar(tk.Frame):
         super().__init__(master)
         self.configure(padx=50, pady=10)
 
-        # Für Enrico: (Bitte Kommentare nach Ausführung löschen)
-        # StringVar erstellen
-        # tkinter Entry
-        # Entry self hinzufügen
-        # Entry wert der StringVar zuweisen
+        
+        self.recepient = tk.StringVar()
+        entry = tk.Entry(self, textvariable=self.recepient)
+        entry.pack(pady=10)
 
         self.open_button = ttk.Button(
             self,
-            text="Open a File ",
+            textvariable=self.recepient,
             command=self.select_file
         )
         self.open_button.pack(expand=True)
