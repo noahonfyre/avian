@@ -13,7 +13,7 @@ class Statistics(tk.Frame):
         # Nur beim ersten und dritten column konfigurieren, das mittlere soll den rest des platzes für sich beanspruchen
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
-        #
+        self.columnconfigure(2, weight=1)
         self.rowconfigure(0)
 
         # Alles hierunter umwandeln zu drei labels (keine wrapper mehr); bitte variablen und templates stehen lassen
@@ -21,35 +21,46 @@ class Statistics(tk.Frame):
         #
         # Für das neue, mittlere label zwei neue Variablen (beide StringVar) erstellen, eine für die private ip, eine für die public ip
         # Durch "|" getrennt in dem label erscheinen lassen (Tipp: Benutze `DynamicTemplate` und gebe einen template string an)
-
-        self.active_connections_wrapper = tk.Frame(self)
-        self.active_connections_wrapper.grid(
-            row=0,
-            column=0,
-            sticky="nsew"
-        )
         
         self.active_transactions = tk.IntVar()
         self.active_peers = tk.IntVar()
         
         self.active_connections = ttk.Label(
-            self.active_connections_wrapper,
+            self,
             textvariable=DynamicTemplate("{} active transaction(s) via {} peer(s)", self.active_transactions, self.active_peers)
         )
-        self.active_connections.pack(anchor="w")
+        self.active_connections.grid(
+            row=0,
+            column=0,
+            sticky="w"
+        )
 
-        self.speed_display_wrapper = tk.Frame(self)
-        self.speed_display_wrapper.grid(
+        self.address_display = ttk.Label(
+        self,
+        text="hallo"
+        )
+
+        self.address_display.grid(
             row=0,
             column=1,
-            sticky="nsew"
+            
+
         )
+
+
+
+
+
+
+        
 
         self.downstream_speed = tk.DoubleVar()
         self.upstream_speed = tk.DoubleVar()
 
         self.speed_display = ttk.Label(
-            self.speed_display_wrapper,
-            textvariable=DynamicTemplate("Downstream: {:.2f} | Upstream: {:.2f}", self.downstream_speed, self.upstream_speed)
-        )
-        self.speed_display.pack(anchor="e")
+            self,
+            textvariable=DynamicTemplate(
+                "Downstream: {:.2f} | Upstream: {:.2f}",
+                self.downstream_speed, self.upstream_speed
+            )
+        ).grid(row=0, column=2, sticky="e")

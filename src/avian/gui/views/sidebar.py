@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import filedialog as fd
-from tkinter.messagebox import showinfo
 
 from src.avian.gui.windows.connection import ConnectionWindow
 
@@ -11,17 +9,11 @@ class Sidebar(tk.Frame):
         super().__init__(master)
         self.configure(padx=50, pady=10)
 
-        
-        self.recepient = tk.StringVar()
-        entry = tk.Entry(self, textvariable=self.recepient)
-        entry.pack(pady=10)
-
-        self.open_button = ttk.Button(
-            self,
-            textvariable=self.recepient,
-            command=self.select_file
-        )
-        self.open_button.pack(expand=True)
+        # Für Enrico: (Bitte Kommentare nach Ausführung löschen)
+        # StringVar erstellen
+        # tkinter Entry
+        # Entry self hinzufügen
+        # Entry wert der StringVar zuweisen
 
         self.connect_button = ttk.Button(
             self,
@@ -29,13 +21,5 @@ class Sidebar(tk.Frame):
             command=lambda: ConnectionWindow(self)
         )
         self.connect_button.pack(expand=True)
-
-    @staticmethod
-    def select_file():
-        filetypes = {
-            ("All files", "*.*")
-        }
-        filename = fd.askopenfilename(title="open a file", filetypes=filetypes)
-        showinfo(title="selected a file", message=filename)
 
          
