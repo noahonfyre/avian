@@ -26,10 +26,13 @@ class Statistics(tk.Frame):
             column=0,
             sticky="w"
         )
+        
+        self.address_private = tk.StringVar()
+        self.address_public = tk.StringVar()
 
         self.address_display = ttk.Label(
         self,
-        text="hallo"
+        textvariable=DynamicTemplate("{} | {}", self.address_private, self.address_public)
         )
 
         self.address_display.grid(
