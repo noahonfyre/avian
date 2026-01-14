@@ -9,37 +9,55 @@ class Statistics(tk.Frame):
         super().__init__(master)
         self.configure(padx=10, pady=5)
 
-        self.columnconfigure(0, weight=1, uniform="x")
-        self.columnconfigure(1, weight=1, uniform="x")
-        self.columnconfigure(2, weight=1, uniform="x")
+        # Für Luca: (Bitte Kommentare nach Ausführung löschen)
+        # Nur beim ersten und dritten column konfigurieren, das mittlere soll den rest des platzes für sich beanspruchen
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
         self.rowconfigure(0)
 
-        self.active_transactions = tk.IntVar(value=0)
-        self.active_peers = tk.IntVar(value=0)
-
-        ttk.Label(
+        # Alles hierunter umwandeln zu drei labels (keine wrapper mehr); bitte variablen und templates stehen lassen
+        # Die drei label elemente ihrer jeweiligen column zuweisen und sticky-wert angeben (Tipp: mittleres Element muss nicht sticky sein)
+        #
+        # Für das neue, mittlere label zwei neue Variablen (beide StringVar) erstellen, eine für die private ip, eine für die public ip
+        # Durch "|" getrennt in dem label erscheinen lassen (Tipp: Benutze `DynamicTemplate` und gebe einen template string an)
+        
+        self.active_transactions = tk.IntVar()
+        self.active_peers = tk.IntVar()
+        
+        self.active_connections = ttk.Label(
             self,
-            textvariable=DynamicTemplate(
-                "{} active transaction(s) via {} peer(s)",
-                self.active_transactions, self.active_peers
-            )
-        ).grid(row=0, column=0, sticky="w")
+            textvariable=DynamicTemplate("{} active transaction(s) via {} peer(s)", self.active_transactions, self.active_peers)
+        )
+        self.active_connections.grid(
+            row=0,
+            column=0,
+            sticky="w"
+        )
 
-        self.address_private = tk.StringVar(value="127.0.0.1")
-        self.address_public = tk.StringVar(value="127.0.0.1")
+        self.address_display = ttk.Label(
+        self,
+        text="hallo"
+        )
 
-        ttk.Label(
-            self,
-            textvariable=DynamicTemplate(
-                "{} | {}",
-                self.address_private, self.address_public
-            )
-        ).grid(row=0, column=1)
+        self.address_display.grid(
+            row=0,
+            column=1,
+            
 
-        self.downstream_speed = tk.DoubleVar(value=0.0)
-        self.upstream_speed = tk.DoubleVar(value=0.0)
+        )
 
-        ttk.Label(
+
+
+
+
+
+        
+
+        self.downstream_speed = tk.DoubleVar()
+        self.upstream_speed = tk.DoubleVar()
+
+        self.speed_display = ttk.Label(
             self,
             textvariable=DynamicTemplate(
                 "Downstream: {:.2f} | Upstream: {:.2f}",
