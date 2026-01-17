@@ -1,8 +1,5 @@
 import tkinter as tk
-
 from tkinter import ttk
-
-from src.avian.gui.windows import ConnectionWindow
 
 
 class Mainframe(tk.Frame):

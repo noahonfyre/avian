@@ -1,2 +1,2 @@
-from .app import App
+from .gui import GUI
 from .menubar import Menubar
