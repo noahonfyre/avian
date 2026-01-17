@@ -1,9 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from avian.gui.gui import GUI
 
 
 class Mainframe(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master: GUI):
         super().__init__(master)
 
         self.rowconfigure(0, weight=1)
@@ -11,9 +15,15 @@ class Mainframe(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1)
 
-        self.treeview = ttk.Treeview(self, columns=("Size", "Progress", "Status", "Speed", "Health", "ETA"))
-        self.vertical_scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.treeview.yview)
-        self.horizontal_scrollbar = ttk.Scrollbar(self, orient="horizontal", command=self.treeview.xview)
+        self.treeview = ttk.Treeview(
+            self, columns=("Size", "Progress", "Status", "Speed", "Health", "ETA")
+        )
+        self.vertical_scrollbar = ttk.Scrollbar(
+            self, orient="vertical", command=self.treeview.yview
+        )
+        self.horizontal_scrollbar = ttk.Scrollbar(
+            self, orient="horizontal", command=self.treeview.xview
+        )
         self.treeview.configure(yscrollcommand=self.vertical_scrollbar.set)
         self.treeview.configure(xscrollcommand=self.horizontal_scrollbar.set)
 
