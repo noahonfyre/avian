@@ -107,17 +107,17 @@ zu beheben und die Gruppe wieder in das Projekt nach der Pause der Ferien einzuf
 die Zukunft des Projektes im Zusammenhang mit der Zeitplanung nachgedacht und auf Basis dieser, gegebenenfalls Features
 abgeändert oder für den Release als nicht zwingend nötig abgehandelt. Features, die darunter fallen, sind beispielsweise
 die Implementierung von einem eigenen, verbindungsorientierten, UDP-basierten Application-Layer Netzwerkprotokoll mit
-Flow Control, Congestion Control und Reliability, welches Multiplexing, Variable Length Integers und Out-of-order
-Delivery unterstützen und dadurch HOL-Blocking verhindern sollte. Wir haben uns entschieden, dieses nur umzusetzen, wenn
-wir nach dem Erreichen unserer Definition of Done noch ausreichend Zeit für eine solche Implementierung hätten. Ein
-weiteres Feature, das aufgrund der Retrospektive weichen musste ist eine Liste an kürzlichen Übertragungen so wie eine
-Kontaktähnliche Liste für das schnelle Starten von Übertragungen mit bereits bekannten Partnern. Die wichtigsten
-Features, die wir in nächster Zeit umsetzen wollen sind im Frontend die Implementierung eines Fensters für die
-Einstellungen der App, das Fenster zur Herstellung einer Verbindung, die Toolbar mit den wichtigsten Aktionen der App an
-einem Punkt vereint sowie die Sidebar, über dessen Inhalt intern noch diskutiert wird. Im Backend fehlt die Umsetzung
-einer festen, geregelten Architektur. Momentan versuche ich Vor- und Nachteile verschiedener Architekturen abzuwiegen
-und besonders auch auf unser Projekt hinsichtlich Komplexität und Zeitaufwand zu beziehen. Die besten Kandidaten zurzeit
-sind Event-Driven-Architecture (besonders für die Kommunikation zwischen den Threads), Microservices und dem bisher
-verwendeten MVCS-Paradigma.
+Flow und Congestion Control, Reliability und ggf. asymmetrisch und symmetrischer Verschlüsslung welches Multiplexing,
+Variable Length Integers und Out-of-order Delivery unterstützen und dadurch HOL-Blocking verhindern sollte. Wir haben
+uns entschieden, dieses nur umzusetzen, wenn wir nach dem Erreichen unserer Definition of Done noch ausreichend Zeit für
+eine solche Implementierung hätten. Ein weiteres Feature, das aufgrund der Retrospektive weichen musste ist eine Liste
+an kürzlichen Übertragungen so wie eine Kontaktähnliche Liste für das schnelle Starten von Übertragungen mit bereits
+bekannten Partnern. Die wichtigsten Features, die wir in nächster Zeit umsetzen wollen sind im Frontend die
+Implementierung eines Fensters für die Einstellungen der App, das Fenster zur Herstellung einer Verbindung, die Toolbar
+mit den wichtigsten Aktionen der App an einem Punkt vereint sowie die Sidebar, über dessen Inhalt intern noch diskutiert
+wird. Im Backend fehlt die Umsetzung einer festen, geregelten Architektur. Momentan versuche ich Vor- und Nachteile
+verschiedener Architekturen abzuwiegen und besonders auch auf unser Projekt hinsichtlich Komplexität und Zeitaufwand zu
+beziehen. Die besten Kandidaten zurzeit sind Event-Driven-Architecture (besonders für die Kommunikation zwischen den
+Threads), Microservices und dem bisher verwendeten MVCS-Paradigma.
 
 ## 21.01.2026
