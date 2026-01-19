@@ -118,6 +118,6 @@ mit den wichtigsten Aktionen der App an einem Punkt vereint sowie die Sidebar, �
 wird. Im Backend fehlt die Umsetzung einer festen, geregelten Architektur. Momentan versuche ich Vor- und Nachteile
 verschiedener Architekturen abzuwiegen und besonders auch auf unser Projekt hinsichtlich Komplexität und Zeitaufwand zu
 beziehen. Die besten Kandidaten zurzeit sind Event-Driven-Architecture (besonders für die Kommunikation zwischen den
-Threads), Microservices und dem bisher verwendeten MVCS-Paradigma.
+Threads), Microservice-Architecture und dem bisher verwendeten MVCS-Paradigma.
 
 ## 21.01.2026
