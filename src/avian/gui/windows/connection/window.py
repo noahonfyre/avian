@@ -4,6 +4,10 @@ from tkinter import ttk
 import tkinter.filedialog as fd
 from tkinter.messagebox import showinfo
 
+from src.avian.gui.windows.loading.window import LoadingWindow
+
+
+
 
 class ConnectionWindow(tk.Toplevel):
     def __init__(self, parent):
@@ -64,7 +68,7 @@ class ConnectionWindow(tk.Toplevel):
         self.cancel_button = ttk.Button(self.action_pane, text="Cancel", command=self.close)
         self.cancel_button.grid(column=0, row=0, sticky="e")
 
-        self.connect_button = ttk.Button(self.action_pane, text="Connect")
+        self.connect_button = ttk.Button(self.action_pane, text="Connect", command=lambda: LoadingWindow(self))
         self.connect_button.grid(column=1, row=0, sticky="e")
 
 
