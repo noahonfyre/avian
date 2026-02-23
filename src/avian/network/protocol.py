@@ -13,8 +13,8 @@ MAGIC: int = 0xAE
 HEADER: struct.Struct = struct.Struct("!BI")
 HEADER_SIZE: int = HEADER.size
 
-ACK = b"ack"
-NACK = b"nack"
+ACK: bytes = "ack".encode()
+NACK: bytes = "nack".encode()
 
 
 def send(conn: socket.socket, payload: bytes) -> None:
