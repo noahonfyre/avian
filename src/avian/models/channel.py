@@ -1,18 +1,21 @@
 import threading
 from collections import deque
-from typing import Optional
+from typing import Deque, Generic, Optional, Type, TypeVar
 
 from avian.models.exceptions import ChannelClosed
 
+T = TypeVar("T")
 
-class Channel[T]:
+
+class Channel(Generic[T]):
     """
     A thread-safe Channel object that can carry messages of type `T`.
     """
 
-    def __init__(self, buffer_size: int = 0):
+    def __init__(self, chan_type: Type[T], buffer_size: int = 0):
+        self.chan_type = chan_type
         self.buffer_size: int = buffer_size
-        self.buffer: deque[T] = deque[T]()
+        self.buffer: Deque[T] = deque[T]()
         self.closed: bool = False
 
         self.sync: threading.Condition = threading.Condition()
@@ -68,9 +71,9 @@ class Channel[T]:
 
     def __next__(self) -> Optional[T]:
         value: Optional[T] = self.recv()
-        if value is None and self.closed:
+        if value is None:
             raise StopIteration
         return value
 
     def __repr__(self):
-        return f"<Channel(buffer_size={self.buffer_size}, closed={self.closed}, id={hex(id(self))})>"
+        return f"<Channel(buffer_size={self.buffer_size}, buffer_len={len(self.buffer)}, closed={self.closed})>"
