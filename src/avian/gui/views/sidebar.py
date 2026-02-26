@@ -10,5 +10,3 @@ class Sidebar(tk.Frame):
         self.configure(padx=50, pady=10)
 
         ttk.Label(self, text="test").grid()
-
-        ConnectionWindow(self)
