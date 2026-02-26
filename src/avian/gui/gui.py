@@ -1,20 +1,22 @@
 import tkinter as tk
 
-from avian.models.event_bus import EventBus
-from src.avian.gui.views import Mainframe, Sidebar, Statistics
-from src.avian.gui.views.toolbar import Toolbar
+from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
+from avian.models import Channel
+from avian.models.messages import Message
 
 
 class GUI(tk.Tk):
-    def __init__(self, bus: EventBus) -> None:
+    def __init__(self, incoming: Channel[Message], outgoing: Channel[Message]) -> None:
         super().__init__()
-        self.bus = bus
+
+        self.incoming = incoming
+        self.outgoing = outgoing
 
         self.title("Avian - Peer-to-peer file transfers")
 
         self.geometry("900x500")
         self.minsize(900, 500)
-        self.protocol("WM_DELETE_WINDOW", self.handle_close)
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
 
         self.rowconfigure(0)
         self.rowconfigure(1, weight=1)
@@ -33,9 +35,6 @@ class GUI(tk.Tk):
 
         self.statistics = Statistics(self)
         self.statistics.grid(row=2, column=0, columnspan=2, sticky="nsew")
-
-    def handle_close(self) -> None:
-        self.destroy()
 
     def run(self) -> None:
         self.mainloop()
