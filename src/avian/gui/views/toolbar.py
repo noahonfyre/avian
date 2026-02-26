@@ -1,13 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from avian.gui.gui import GUI
 
 
 class Toolbar(tk.Frame):
-    def __init__(self, master: GUI):
+    def __init__(self, master: tk.Tk):
         super().__init__(master)
         self.columnconfigure(0)
         self.rowconfigure(0, weight=1, uniform= "x")

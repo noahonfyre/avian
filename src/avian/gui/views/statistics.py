@@ -1,15 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
-from typing import TYPE_CHECKING
 
 from avian.gui.misc.dynamic_template import DynamicTemplate
 
-if TYPE_CHECKING:
-    from avian.gui.gui import GUI
-
 
 class Statistics(tk.Frame):
-    def __init__(self, master: GUI):
+    def __init__(self, master: tk.Tk):
         super().__init__(master)
         self.configure(padx=10, pady=5)
 
