@@ -2,7 +2,7 @@ import logging
 import traceback
 
 from avian.core import Bootstrap
-from avian.gui import GUI
+from avian.gui.gui import GUI
 from avian.models.channel import Channel
 from avian.models.constants import ID, LOGGER, VERSION
 from avian.models.messages import Message
