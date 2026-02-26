@@ -1,39 +1,40 @@
+import random
 import tkinter as tk
 from tkinter import ttk
 
 class LoadingWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
-        self.geometry("400x250")
-        self.minsize(400, 250)
+        self.geometry("250x100")
+        self.minsize(250, 100)
+        self.title("Connecting...")
         self.transient(parent)
         self.grab_set()
 
         self.configure(padx=5, pady=5)
 
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=1)
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=1)
+        self.rowconfigure(1)
 
-        self.cancel_button = ttk.Button(self, text="Cancel")
-        self.cancel_button.grid(column=0, row=2, sticky="se")
+        self.cancel_button = ttk.Button(self, text="Cancel", command=self.close)
+        self.cancel_button.grid(column=0, row=1, sticky="se")
 
-        self.loadingbar = ttk.Progressbar(self, orient= "horizontal", mode="determinate",length=300)
-        self.loadingbar.grid(column=1, row=1)
+        self.progress_var = tk.IntVar()
 
-        self.progress_step_var = tk.StringVar()
+        self.loadingbar = ttk.Progressbar(self, orient="horizontal", mode="determinate", maximum=100, variable=self.progress_var)
+        self.loadingbar.grid(column=0, row=0, sticky="ew")
     
-        value_label = ttk.Label(self, textvariable=self.progress_step_var)
-        value_label.grid(column=2, row=1)   
+        value_label = ttk.Label(self, textvariable=self.progress_var)
+        value_label.grid(column=0, row=1, sticky="sw")   
+
+        self.after(500, lambda: self.progress(random.randint(1, 100)))
         
              
     def progress(self, progress: int):
-        current_progress = self.loadingbar.value
-        if current_progress < 100:
-            self.loadingbar.value = progress
+        current_progress = self.progress_var
+        if current_progress.get() < 100:
+            self.progress_var.set(progress)
 
 
     def close(self):
