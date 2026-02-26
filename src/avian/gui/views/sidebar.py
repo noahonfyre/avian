@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+from src.avian.gui.windows import ConnectionWindow
+
 
 class Sidebar(tk.Frame):
     def __init__(self, master: tk.Tk):
@@ -8,3 +10,5 @@ class Sidebar(tk.Frame):
         self.configure(padx=50, pady=10)
 
         ttk.Label(self, text="test").grid()
+
+        ConnectionWindow(self)
