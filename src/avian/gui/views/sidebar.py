@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.avian.gui.windows import ConnectionWindow
-
 
 class Sidebar(tk.Frame):
     def __init__(self, master: tk.Tk):
