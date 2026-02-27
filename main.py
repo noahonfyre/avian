@@ -28,6 +28,8 @@ def main() -> None:
         # TODO: add better error handling
         traceback.print_exception(type(e), e, e.__traceback__)
 
+    LOGGER.info("Gracefully shutting down...")
+
 
 if __name__ == "__main__":
     main()
