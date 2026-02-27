@@ -3,7 +3,7 @@ import tkinter.filedialog as fd
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 
-from src.avian.gui.windows.loading import LoadingWindow
+from avian.gui.windows.loading import LoadingWindow
 
 
 class ConnectionWindow(tk.Toplevel):
