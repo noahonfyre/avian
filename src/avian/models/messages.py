@@ -10,7 +10,7 @@ class Message:
 class RejectedConnection(Message):
     address: str
     port: int
-    peer_version: int
+    cause: str
 
 
 @dataclass(frozen=True)

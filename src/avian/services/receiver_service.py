@@ -13,18 +13,18 @@ from avian.models.messages import (
     TransactionStart,
     TransactionUpdate,
 )
-from avian.network.protocol import ACK, NACK, recv, send
+from avian.models.network.protocol import ACK, NACK, recv, send
 from avian.services import Service
 from avian.utils.hashing import verify_file_hash
 
 
-class Receiver(Service):
+class ReceiverService(Service):
     def __init__(
-            self,
-            outgoing: Channel[Message],
-            save_path: Path,
-            port: int,
-            sock: Optional[socket.socket] = None,
+        self,
+        outgoing: Channel[Message],
+        save_path: Path,
+        port: int,
+        sock: Optional[socket.socket] = None,
     ) -> None:
         self.outgoing: Channel[Message] = outgoing
         self.save_path: Path = save_path
@@ -54,11 +54,13 @@ class Receiver(Service):
                     f"Rejecting {addr[0]}:{addr[1]} due to version mismatch."
                 )
                 send(conn, NACK)
-                self.outgoing.send(RejectedConnection(
-                    addr[0],
-                    addr[1],
-                    f"Rejecting {addr[0]}:{addr[1]} due to version mismatch."
-                ))
+                self.outgoing.send(
+                    RejectedConnection(
+                        addr[0],
+                        addr[1],
+                        f"Rejecting {addr[0]}:{addr[1]} due to version mismatch.",
+                    )
+                )
                 continue
 
             send(conn, ACK)
