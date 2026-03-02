@@ -44,7 +44,7 @@ class ReceiverService(Service):
                     LOGGER.warning(f"Failed to handle {addr[0]}:{addr[1]}: {e}")
                 i += 1
 
-            LOGGER.info("Concluding sender service...")
+            LOGGER.info("Concluding receiver service...")
 
     def handle_connection(self, conn: socket.socket, addr: Tuple[str, int]) -> None:
         LOGGER.info(f"Incoming connection: {addr[0]}:{addr[1]}")
