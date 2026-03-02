@@ -17,8 +17,8 @@ def main() -> None:
 
     LOGGER.info(f"Initializing {ID} v{VERSION}...")
 
-    event_channel: Channel[Message] = Channel(Message, 1024)
-    command_channel: Channel[Message] = Channel(Message, 1024)
+    event_channel: Channel[Message] = Channel(Message, -1)
+    command_channel: Channel[Message] = Channel(Message, -1)
 
     try:
         gui: GUI = GUI(event_channel, command_channel)

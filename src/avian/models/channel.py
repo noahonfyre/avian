@@ -24,7 +24,10 @@ class Channel(Generic[T]):
         """
         Helper function to check if the channel's internal buffer is full.
         """
-        return 0 < self.buffer_size <= len(self.buffer)
+        if self.buffer_size < 0:
+            return False
+        else:
+            return 0 < self.buffer_size <= len(self.buffer)
 
     def send(self, value: T) -> None:
         """
