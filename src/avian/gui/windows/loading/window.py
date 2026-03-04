@@ -2,6 +2,7 @@ import random
 import tkinter as tk
 from tkinter import ttk
 
+
 class LoadingWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -22,20 +23,23 @@ class LoadingWindow(tk.Toplevel):
 
         self.progress_var = tk.IntVar()
 
-        self.loadingbar = ttk.Progressbar(self, orient="horizontal", mode="determinate", maximum=100, variable=self.progress_var)
+        self.loadingbar = ttk.Progressbar(
+            self,
+            orient="horizontal",
+            mode="determinate",
+            maximum=100,
+            variable=self.progress_var,
+        )
         self.loadingbar.grid(column=0, row=0, sticky="ew")
-    
+
         value_label = ttk.Label(self, textvariable=self.progress_var)
-        value_label.grid(column=0, row=1, sticky="sw")   
+        value_label.grid(column=0, row=1, sticky="sw")
 
-        self.after(500, lambda: self.progress(random.randint(1, 100)))
-        
-             
+        self.after(250, lambda: self.progress(random.randint(1, 100)))
+
     def progress(self, progress: int):
-        current_progress = self.progress_var
-        if current_progress.get() < 100:
+        if self.progress_var.get() < 100:
             self.progress_var.set(progress)
-
 
     def close(self):
         self.destroy()
