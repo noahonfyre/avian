@@ -4,11 +4,11 @@ import time
 from pathlib import Path
 from typing import Tuple
 
-from avian.models import Channel
-from avian.models.constants import LOGGER, VERSION
+from avian.models.channel import Channel
+from avian.models.constants import LOGGER, PROTOCOL_VERSION
 from avian.models.messages import Message, TransactionStart, TransactionUpdate
 from avian.models.network.protocol import ACK, NACK, recv, send
-from avian.services import Service
+from avian.services.service import Service
 from avian.utils.hashing import verify_file_hash
 
 
@@ -52,7 +52,7 @@ class ReceiverService(Service):
         LOGGER.info("Checking peer version...")
         peer_version: int = struct.unpack("!I", recv(conn))[0]
 
-        if peer_version != VERSION:
+        if peer_version != PROTOCOL_VERSION:
             LOGGER.warning(f"Rejecting {addr[0]}:{addr[1]} due to version mismatch.")
             send(conn, NACK)
             return

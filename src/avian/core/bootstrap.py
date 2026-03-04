@@ -1,6 +1,6 @@
 import threading
 
-from avian.models import Channel
+from avian.models.channel import Channel
 from avian.models.constants import SAVE_PATH
 from avian.models.messages import Message, StartSender
 from avian.services.receiver_service import ReceiverService

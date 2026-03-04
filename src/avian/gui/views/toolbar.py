@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from avian.gui.windows.connection.window import ConnectionWindow
 from avian.gui.windows.settings.window import SettingsWindow
-from avian.models import Channel
+from avian.models.channel import Channel
 from avian.models.messages import Message
 
 

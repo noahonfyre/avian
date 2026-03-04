@@ -3,7 +3,7 @@ import tkinter as tk
 from typing import Callable, Optional
 
 from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
-from avian.models import Channel
+from avian.models.channel import Channel
 from avian.models.constants import LOGGER
 from avian.models.messages import Message
 
@@ -49,7 +49,7 @@ class GUI(tk.Tk):
             if self.incoming.is_empty():
                 break
             data: Optional[Message] = self.incoming.recv()
-            print(data)
+            LOGGER.debug(data)
         elapsed = time.perf_counter() - start
         LOGGER.debug(f"Event cycle lasted {elapsed:.2f} seconds")
 

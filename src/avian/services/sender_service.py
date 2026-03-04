@@ -4,8 +4,8 @@ import time
 from pathlib import Path
 from typing import List
 
-from avian.models import Channel
-from avian.models.constants import CHUNK_SIZE, LOGGER, VERSION
+from avian.models.channel import Channel
+from avian.models.constants import CHUNK_SIZE, LOGGER, PROTOCOL_VERSION
 from avian.models.messages import (
     Message,
     RejectedConnection,
@@ -13,7 +13,7 @@ from avian.models.messages import (
     TransactionUpdate,
 )
 from avian.models.network.protocol import ACK, recv, send
-from avian.services import Service
+from avian.services.service import Service
 from avian.utils.hashing import calculate_hash
 
 
@@ -35,7 +35,7 @@ class SenderService(Service):
             sock.connect((self.address, self.port))
 
             LOGGER.info("Transferring version...")
-            send(sock, struct.pack("!I", VERSION))
+            send(sock, struct.pack("!I", PROTOCOL_VERSION))
 
             if recv(sock) != ACK:
                 LOGGER.warning(

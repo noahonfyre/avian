@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from avian.models import Channel
+from avian.models.channel import Channel
 from avian.models.messages import Message
 
 
