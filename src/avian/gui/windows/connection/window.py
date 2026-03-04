@@ -1,14 +1,21 @@
 import tkinter as tk
 import tkinter.filedialog as fd
+from pathlib import Path
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 
 from avian.gui.windows.loading import LoadingWindow
+from avian.models import Channel
+from avian.models.messages import Message, StartSender
 
 
 class ConnectionWindow(tk.Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(parent)
+
+        self.incoming = incoming
+        self.outgoing = outgoing
+
         self.title("Initiate transaction")
         self.geometry("600x350")
         self.minsize(600, 350)
@@ -84,9 +91,19 @@ class ConnectionWindow(tk.Toplevel):
         self.cancel_button.grid(column=0, row=0, sticky="e")
 
         self.connect_button = ttk.Button(
-            self.action_pane, text="Connect", command=lambda: LoadingWindow(self)
+            self.action_pane, text="Connect", command=self.connect
         )
         self.connect_button.grid(column=1, row=0, sticky="e")
+
+    def connect(self):
+        LoadingWindow(self)
+        self.outgoing.send(
+            StartSender(
+                self.target_address.get(),
+                self.target_port.get(),
+                [Path("C:\\Users\\Noah\\Downloads\\20260128 121019.gif")],
+            )
+        )
 
     @staticmethod
     def select_file():

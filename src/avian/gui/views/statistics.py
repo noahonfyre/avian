@@ -2,11 +2,17 @@ import tkinter as tk
 from tkinter import ttk
 
 from avian.gui.misc.dynamic_template import DynamicTemplate
+from avian.models import Channel
+from avian.models.messages import Message
 
 
 class Statistics(tk.Frame):
-    def __init__(self, master: tk.Tk):
+    def __init__(self, master, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(master)
+
+        self.incoming = incoming
+        self.outgoing = outgoing
+
         self.configure(padx=10, pady=5)
 
         self.columnconfigure(0, weight=1)

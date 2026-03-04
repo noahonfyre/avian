@@ -1,10 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 
+from avian.models import Channel
+from avian.models.messages import Message
+
 
 class Mainframe(tk.Frame):
-    def __init__(self, master: tk.Tk):
+    def __init__(self, master, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(master)
+
+        self.incoming = incoming
+        self.outgoing = outgoing
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1)
