@@ -29,6 +29,12 @@ class Channel(Generic[T]):
         else:
             return 0 < self.buffer_size <= len(self.buffer)
 
+    def is_empty(self) -> bool:
+        """
+        Helper function to check if the channel's internal buffer is empty.
+        """
+        return len(self.buffer) == 0
+
     def send(self, value: T) -> None:
         """
         Puts a message of type `T` into the channel's buffer which can be read by `Channel.recv()`.
@@ -52,7 +58,7 @@ class Channel(Generic[T]):
         """
 
         with self.sync:
-            while len(self.buffer) == 0:
+            while self.is_empty():
                 if self.closed:
                     return None
                 self.sync.wait()
