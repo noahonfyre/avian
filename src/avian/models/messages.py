@@ -1,9 +1,19 @@
+from pathlib import Path
+from typing import List
+
 from attr import dataclass
 
 
 @dataclass(frozen=True)
 class Message:
     pass
+
+
+@dataclass(frozen=True)
+class StartSender(Message):
+    address: str
+    port: int
+    files: List[Path]
 
 
 @dataclass(frozen=True)
