@@ -1,9 +1,8 @@
 import threading
-from pathlib import Path
 
 from avian.models import Channel
 from avian.models.constants import SAVE_PATH
-from avian.models.messages import Message
+from avian.models.messages import Message, StartSender
 from avian.services.receiver_service import ReceiverService
 from avian.services.sender_service import SenderService
 from avian.services.service import Service
@@ -23,19 +22,15 @@ class Bootstrap(threading.Thread):
             daemon=True,
         ).start()
 
-        # TODO: change hardcoded values to dynamic inputs
-        threading.Thread(
-            target=run_service,
-            args=(
-                SenderService(
-                    self.outgoing,
-                    [Path("C:\\Users\\Noah\\Downloads\\20260128 121019.gif")],
-                    "127.0.0.1",
-                    23500,
-                ),
-            ),
-            daemon=True,
-        ).start()
+        for msg in self.incoming:
+            if isinstance(msg, StartSender):
+                threading.Thread(
+                    target=run_service,
+                    args=(
+                        SenderService(self.outgoing, msg.files, msg.address, msg.port),
+                    ),
+                    daemon=True,
+                ).start()
 
     def __enter__(self):
         self.start()
