@@ -15,7 +15,7 @@ class Bootstrap(threading.Thread):
         self.outgoing = outgoing
 
     def run(self):
-        # TODO: change hardcoded values to dynamic inputs
+        # TODO: change hardcoded values to dynamic values from config
         threading.Thread(
             target=run_service,
             args=(ReceiverService(self.outgoing, SAVE_PATH, 23500),),
@@ -23,6 +23,7 @@ class Bootstrap(threading.Thread):
         ).start()
 
         for msg in self.incoming:
+            # TODO: change if-elif branching to a more dynamic solution
             if isinstance(msg, StartSender):
                 threading.Thread(
                     target=run_service,
