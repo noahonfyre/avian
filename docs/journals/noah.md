@@ -17,14 +17,14 @@
 
 Am 29.10. habe ich mit der Projektarbeit durch das Erstellen des Git-Repositorys sowie dessen Einrichtung begonnen.
 Dabei habe ich mich zuerst um einen Namen für das Projekt gekümmert und bin auf "Avian" (z. Dt. Vogel-), aufgrund der
-Verbindung zwischen Vögeln und Freiheit (→ Dezentralisierung & Open Source). Ich habe ebenfalls das Kanban-Board und
-Zugriff für Teammitglieder eingerichtet, erste Tickets/Issues erstellt und zugewiesen.
+Verbindung zwischen Vögeln und Freiheit (→ Dezentralisierung & Open Source). Ich habe ebenfalls das Kanban-Board sowie
+den Zugriff für Teammitglieder auf das Repository eingerichtet und erste Tickets/Issues erstellt und zugewiesen.
 
 ## 12.11.2025
 
 Am 12.11. habe ich angefangen, die Projektstruktur festzulegen und habe dafür erste Module, Dateien und Klassen
-erstellt. Anschließend habe ich mich um weitere organisatorische Dinge, wie das Einrichten des Code-Editors von meinen
-Teammitgliedern, sowie deren Verbindung mit dem Git-Server, gekümmert.
+erstellt. Anschließend habe ich mich um weitere organisatorische Dinge, wie das Einrichten des Code-Editors meiner
+Teammitglieder, sowie deren Verbindung zur Remote, gekümmert.
 
 ## 19.11.2025
 
@@ -50,12 +50,11 @@ Projektstruktur betrieben: dem MVCS-Paradigma (Model-View-Controller-Service), i
 gegliedert wird:
 
 Das Model enthält hauptsächlich Anwendungslogik, ist aber auch für State Management und Datenspeicherung bzw. -austausch
-vorgesehen. Hier befinden sich außerdem bei uns viele Typ- bzw. Klassendeklarierungen. Ein Beispiel in unserer
-Implementierung ist der `EventBus`.
+vorgesehen. Hier befinden sich außerdem bei uns viele Typ- bzw. Klassendeklarierungen.
 
 Ein View ist in unserem Fall die grafische Benutzeroberfäche. Der View visualisiert Daten, die er vom Controller
 erhält. Außerdem leitet der View Eingaben von Benutzern (darunter Textfeld-Eingaben, Button-Klicks, etc.) an den
-Controller weiter. Hierbei handelt es sich bei uns um `App` und dessen Unterklassen.
+Controller weiter.
 
 Der Controller dient als Brücke zwischen Models und View. Er leitet Informationen von den Models und Services zum View
 weiter und Informationen vom View zu den Models und Services.
@@ -109,15 +108,67 @@ abgeändert oder für den Release als nicht zwingend nötig abgehandelt. Feature
 die Implementierung von einem eigenen, verbindungsorientierten, UDP-basierten Application-Layer Netzwerkprotokoll mit
 Flow und Congestion Control, Reliability und ggf. asymmetrisch und symmetrischer Verschlüsslung welches Multiplexing,
 Variable Length Integers und Out-of-order Delivery unterstützen und dadurch HOL-Blocking verhindern sollte. Wir haben
-uns entschieden, dieses nur umzusetzen, wenn wir nach dem Erreichen unserer Definition of Done noch ausreichend Zeit für
-eine solche Implementierung hätten. Ein weiteres Feature, das aufgrund der Retrospektive weichen musste ist eine Liste
-an kürzlichen Übertragungen so wie eine Kontaktähnliche Liste für das schnelle Starten von Übertragungen mit bereits
-bekannten Partnern. Die wichtigsten Features, die wir in nächster Zeit umsetzen wollen sind im Frontend die
-Implementierung eines Fensters für die Einstellungen der App, das Fenster zur Herstellung einer Verbindung, die Toolbar
-mit den wichtigsten Aktionen der App an einem Punkt vereint sowie die Sidebar, über dessen Inhalt intern noch diskutiert
-wird. Im Backend fehlt die Umsetzung einer festen, geregelten Architektur. Momentan versuche ich Vor- und Nachteile
-verschiedener Architekturen abzuwiegen und besonders auch auf unser Projekt hinsichtlich Komplexität und Zeitaufwand zu
-beziehen. Die besten Kandidaten zurzeit sind Event-Driven-Architecture (besonders für die Kommunikation zwischen den
-Threads), Microservice-Architecture und dem bisher verwendeten MVCS-Paradigma.
+uns entschieden, dieses nur umzusetzen, wenn wir nach dem Erreichen unserer neu abgeänderten Definition of Done noch
+ausreichend Zeit für eine solche Implementierung hätten. Ein weiteres Feature, das aufgrund der Retrospektive weichen
+musste ist eine Liste an kürzlichen Übertragungen so wie eine Kontaktähnliche Liste für das schnelle Starten von
+Übertragungen mit bereits bekannten Partnern. Die wichtigsten Features, die wir in nächster Zeit umsetzen wollen sind im
+Frontend die Implementierung eines Fensters für die Einstellungen der App, das Fenster zur Herstellung einer Verbindung,
+die Toolbar mit den wichtigsten Aktionen der App an einem Punkt vereint sowie die Sidebar, über dessen Inhalt intern
+noch diskutiert wird. Im Backend fehlt die Umsetzung einer festen, geregelten Architektur. Momentan versuche ich Vor-
+und Nachteile verschiedener Architekturen abzuwiegen und besonders auch auf unser Projekt hinsichtlich Komplexität und
+Zeitaufwand zu beziehen. Die besten Kandidaten zurzeit sind Event-Driven-Architecture (besonders für die Kommunikation
+zwischen den Threads), Microservice-Architecture und dem bisher verwendeten MVCS-Paradigma.
 
 ## 21.01.2026
+
+Heute habe ich weiter über mögliche Umsetzungen der Thread-Synchronization-Implementierung bzw. die Art und Weise der
+Kommunikation zwischen den Threads nachgedacht und habe ebenfalls einige Muster dafür entworfen. Dabei gibt es zwei
+Oberkategorien mit Unterpunkten, die abgewogen werden müssen:
+
+### Shared Memory
+
+Shared Memory ist ein Pattern, in dem der gleiche Speicher von unterschiedlichen Threads abgefragt und modifiziert
+werden darf. Dabei können verschiedene Herangehensweisen benutzt werden:
+
+- Mutex (Mutual Exclusion Lock): Ein Mutex sorgt dafür, dass jeder Thread, der einen bestimmten Abschnitt des Codes
+  aufruft, ein sogenannten *Lock* vom Mutex abzurufen (*acquire*), welcher verhindert, dass ein anderer Thread auf den
+  Abschnitt zugreifen kann. Wenn der Thread mit dem Abschnitt fertig ist, muss der *Lock* des Mutexes freigegeben
+  werden (*release*), sodass der andere Thread auf den Bereich mit der gleichen Herangehensweise zugreifen kann.
+- Konditionsvariablen: Konditionsvariablen werden gemeinsam mit einem Mutex benutzt, um nur auf eine Variable
+  zuzugreifen, wenn ein bestimmter Fall eintrifft.
+- Semaphoren: Semaphoren werden dafür benutzt, dass lediglich eine begrenzte Anzahl an Threads gleichzeitig Zugriff
+  erhalten.
+
+### Message Passing
+
+Message Passing beschreibt den Austausch von Daten, der nicht über die vorher beschriebenen Wege von geteiltem Speicher
+läuft, sondern über das Senden von Daten über eine Brücke. Auch diese Herangehensweise ist in verschiedene
+Unterkategorien aufgeteilt:
+
+- Queues: Eine Queue ist eine Möglichkeit zum Datenaustausch durch das Übergeben (*passing*) von Daten. Das
+  System ist mit einer Art Briefkasten vergleichbar, auf den permanent zugegriffen werden kann. Eine Seite kann etwas in
+  die Queue hereingeben (*put*) und die andere kann
+- Channels: Ein Channel basiert auf einer Queue und bietet zusätzliche Struktur und Sicherheit. Dieser kann für weitere
+  High-Level Implementierungen, wie beispielsweise einen EventBus benutzt werden.
+
+### Weiterführende Lösungen
+
+Weiterführend werden diese Mechanismen für die Implementierung einer der folgenden Lösungen für die
+Cross-Thread-Kommunikation genutzt:
+
+- EventBus: Ein EventBus ist ein Interface, welches Messages/Events annimmt (*emit*/*post*) und an die zuständigen
+  *Event Handler* (*subscribe*) anbindet. Die hinterlegte Funktion wird, sobald ein Event emittiert wird, ausgeführt.
+  Gegebenenfalls ist der gezielte Event-Handler keine Funktion, sondern ein *Consumer* mit Typ *T*, der die Klasse des
+  Ziels des Event Handlers darstellt.
+- Dispatcher/Invocation Queue: Mithilfe des Dispatching-Systems kann man Code, der in einem Thread definiert ist, durch
+  den Dispatcher auf einem anderen Thread (bzw. in einem anderen Event Loop) ausführen. Für dieses Design muss auf
+  beiden Seiten ein Event Loop vorliegen und eine Polling/Tick Rate festgelegt werden.
+
+## 05.02.2026
+
+Heute habe ich die Struktur des Git-Repositories noch einmal überarbeitet, indem ich den `next`-Branch erstellt habe.
+Der `master`-Branch wird nur noch Stable-Versionen beinhalten, der neue `next`-Branch agiert hingegen als
+Development-Environment. Und mich final für den EventBus (High-Level Interface für Message Passing mittels Channels) als
+Lösung für die Thread Synchronization entschieden. Außerdem habe ich versucht, das Team trotz der
+Probleme mit dem Git Server zu organisieren und unsere nächsten Schritte bezüglich zeitlicher Planung festzustellen.
+
