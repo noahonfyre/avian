@@ -1,7 +1,10 @@
+import time
 import tkinter as tk
+from typing import Callable, Optional
 
 from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
 from avian.models import Channel
+from avian.models.constants import LOGGER
 from avian.models.messages import Message
 
 
@@ -37,4 +40,19 @@ class GUI(tk.Tk):
         self.statistics.grid(row=2, column=0, columnspan=2, sticky="nsew")
 
     def run(self) -> None:
+        self.schedule(20, self.consume_events)
         self.mainloop()
+
+    def consume_events(self) -> None:
+        start = time.perf_counter()
+        while True:
+            if self.incoming.is_empty():
+                break
+            data: Optional[Message] = self.incoming.recv()
+            print(data)
+        elapsed = time.perf_counter() - start
+        LOGGER.debug(f"Event cycle lasted {elapsed:.2f} seconds")
+
+    def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
+        func()
+        self.after(interval_ms, self.schedule, interval_ms, func)
