@@ -5,7 +5,7 @@ from typing import Callable, Optional
 from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
 from avian.models.channel import Channel
 from avian.models.constants import LOGGER
-from avian.models.messages import Message
+from avian.models.messages import Message, TransactionUpdate
 
 
 class GUI(tk.Tk):
@@ -52,6 +52,19 @@ class GUI(tk.Tk):
             LOGGER.debug(data)
         elapsed = time.perf_counter() - start
         LOGGER.debug(f"Event cycle lasted {elapsed:.2f} seconds")
+
+    def handle_update_transactions(self, msg: Message):
+        if isinstance(msg, TransactionUpdate):
+            treeview = self.mainframe.treeview
+            
+            treeview.insert("#0", tk.END, text=msg.filename)
+            treeview.insert("Size", text=msg.file_size)
+            treeview.insert("Progress", text=msg.bytes_transferred/msg.file_size)
+            treeview.insert("Status", text="Status")
+            treeview.insert("Speed", text=msg.bytes_transferred/msg.elapsed)
+            treeview.insert("Health", text="Health")
+            treeview.insert("ETA", text=msg.file_size/(msg.bytes_transferred/msg.elapsed))
+
 
     def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
         func()
