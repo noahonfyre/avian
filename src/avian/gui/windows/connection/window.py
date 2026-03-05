@@ -4,7 +4,7 @@ from pathlib import Path
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 
-from avian.gui.windows.loading import LoadingWindow
+from avian.gui.windows.loading.window import LoadingWindow
 from avian.models.channel import Channel
 from avian.models.messages import Message, StartSender
 
