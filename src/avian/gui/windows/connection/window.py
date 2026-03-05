@@ -101,15 +101,16 @@ class ConnectionWindow(tk.Toplevel):
             StartSender(
                 self.target_address.get(),
                 self.target_port.get(),
-                [Path("C:\\Users\\Noah\\Downloads\\20260128 121019.gif")],
+                [Path(filename) for filename in self.filenames],
             )
         )
 
-    @staticmethod
-    def select_file():
+    def select_file(self):
         filetypes = {("All files", "*.*")}
-        filename = fd.askopenfilenames(title="Add files", filetypes=filetypes)
-        showinfo(title="This shouldn't be in prod", message=", ".join(filename))
+        self.filenames = fd.askopenfilenames(title="Add files", filetypes=filetypes)
+
+        for filename in self.filenames:
+            self.file_list.insert("", tk.END, text=filename)
 
     def close(self):
         self.destroy()
