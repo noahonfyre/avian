@@ -10,6 +10,11 @@ class Message:
 
 
 @dataclass(frozen=True)
+class Shutdown(Message):
+    pass
+
+
+@dataclass(frozen=True)
 class StartSender(Message):
     address: str
     port: int
