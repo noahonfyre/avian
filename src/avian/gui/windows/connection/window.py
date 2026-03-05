@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.filedialog as fd
 from pathlib import Path
 from tkinter import ttk
-from tkinter.messagebox import showinfo
+from typing import List, Literal, Tuple
 
 from avian.gui.windows.loading.window import LoadingWindow
 from avian.models.channel import Channel
@@ -13,6 +13,7 @@ class ConnectionWindow(tk.Toplevel):
     def __init__(self, parent, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(parent)
 
+        self.filenames: List[Path] = []
         self.incoming = incoming
         self.outgoing = outgoing
 
@@ -101,16 +102,19 @@ class ConnectionWindow(tk.Toplevel):
             StartSender(
                 self.target_address.get(),
                 self.target_port.get(),
-                [Path(filename) for filename in self.filenames],
+                self.filenames,
             )
         )
 
     def select_file(self):
         filetypes = {("All files", "*.*")}
-        self.filenames = fd.askopenfilenames(title="Add files", filetypes=filetypes)
+        raw_filenames: Literal[""] | Tuple[str, ...] = fd.askopenfilenames(
+            title="Add files", filetypes=filetypes
+        )
+        self.filenames = [Path(filename) for filename in raw_filenames]
 
         for filename in self.filenames:
-            self.file_list.insert("", tk.END, text=filename)
+            self.file_list.insert("", "end", text=filename.name)
 
     def close(self):
         self.destroy()
