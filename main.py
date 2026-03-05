@@ -30,6 +30,9 @@ def main() -> None:
 
     LOGGER.info("Shutting down...")
 
+    event_channel.close()
+    command_channel.close()
+
 
 if __name__ == "__main__":
     main()
