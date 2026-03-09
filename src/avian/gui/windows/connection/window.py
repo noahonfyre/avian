@@ -38,6 +38,7 @@ class ConnectionWindow(tk.Toplevel):
 
         self.file_list = ttk.Treeview(self.attachment_wrapper)
         self.file_list.grid(row=0, column=0, sticky="nsew")
+        self.file_list.heading("#0", text="Files")
 
         self.file_list_scrollbar = ttk.Scrollbar(
             self.attachment_wrapper, orient="vertical", command=self.file_list.yview
