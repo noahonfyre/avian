@@ -31,20 +31,12 @@ class ReceiverService(Service):
             sock.listen()
             LOGGER.info(f"Listening on :{self.port}.")
 
-            i = 0
-
             while True:
-                # TODO: change break logic
-                if i > 0:
-                    break
                 conn, addr = sock.accept()
                 try:
                     self.handle_connection(conn, addr)
                 except Exception as e:
                     LOGGER.warning(f"Failed to handle {addr[0]}:{addr[1]}: {e}")
-                i += 1
-
-            LOGGER.info("Concluding receiver service...")
 
     def handle_connection(self, conn: socket.socket, addr: Tuple[str, int]) -> None:
         LOGGER.info(f"Incoming connection: {addr[0]}:{addr[1]}")
@@ -87,10 +79,10 @@ class ReceiverService(Service):
 
         destination: Path = self.save_path / Path(filename).name
         transferred = 0
+        start = time.perf_counter()
 
         with open(destination, "wb") as file:
             while transferred < file_size:
-                start = time.perf_counter()
                 chunk: bytes = recv(conn)
                 if not chunk:
                     break

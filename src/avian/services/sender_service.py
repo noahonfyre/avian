@@ -81,10 +81,10 @@ class SenderService(Service):
         LOGGER.info(f"Starting transfer of {filename} ({file_size}B)...")
 
         transferred = 0
+        start = time.perf_counter()
 
         with open(path, "rb") as file:
             while transferred < file_size:
-                start = time.perf_counter()
                 chunk: bytes = file.read(CHUNK_SIZE)
                 if not chunk:
                     break
