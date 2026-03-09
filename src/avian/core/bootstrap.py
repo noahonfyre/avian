@@ -1,7 +1,7 @@
 import threading
 
 from avian.models.channel import Channel
-from avian.models.constants import LOGGER, SAVE_PATH
+from avian.models.constants import LOGGER, PROTOCOL_PORT, SAVE_PATH
 from avian.models.messages import Message, Shutdown, StartSender
 from avian.services.receiver_service import ReceiverService
 from avian.services.sender_service import SenderService
@@ -18,7 +18,7 @@ class Bootstrap(threading.Thread):
         # TODO: change hardcoded values to dynamic values from config
         threading.Thread(
             target=run_service,
-            args=(ReceiverService(self.outgoing, SAVE_PATH, 23500),),
+            args=(ReceiverService(self.outgoing, SAVE_PATH, PROTOCOL_PORT),),
             daemon=True,
         ).start()
 
