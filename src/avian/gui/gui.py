@@ -66,9 +66,9 @@ class GUI(tk.Tk):
             msg.port,
             msg.filename,
             f"{msg.bytes_transferred}B/{msg.file_size}B",
-            f"{progress:.2f}",
+            f"{progress * 100:.2f}%",
             "status",
-            f"{speed:.2f}",
+            f"{speed:.2f}B/s",
             "health",
             f"{eta:.2f}s",
         )
