@@ -49,3 +49,10 @@ class TransactionUpdate(Message):
     bytes_transferred: int
     file_size: int
     elapsed: float
+
+
+@dataclass(frozen=True)
+class TransactionConclude(Message):
+    address: str
+    port: int
+    filename: str
