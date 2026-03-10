@@ -6,7 +6,12 @@ from typing import Tuple
 
 from avian.models.channel import Channel
 from avian.models.constants import LOGGER, PROTOCOL_VERSION
-from avian.models.messages import Message, TransactionStart, TransactionUpdate
+from avian.models.messages import (
+    Message,
+    TransactionConclude,
+    TransactionStart,
+    TransactionUpdate,
+)
 from avian.models.network.protocol import ACK, NACK, recv, send
 from avian.services.service import Service
 from avian.utils.hashing import verify_file_hash
@@ -100,4 +105,5 @@ class ReceiverService(Service):
                     )
                 )
         LOGGER.info(f"File {filename} saved in {destination}.")
+        self.outgoing.send(TransactionConclude(addr[0], addr[1], filename))
         return destination

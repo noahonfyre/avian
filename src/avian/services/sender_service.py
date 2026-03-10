@@ -9,6 +9,7 @@ from avian.models.constants import CHUNK_SIZE, LOGGER, PROTOCOL_VERSION
 from avian.models.messages import (
     Message,
     RejectedConnection,
+    TransactionConclude,
     TransactionStart,
     TransactionUpdate,
 )
@@ -102,3 +103,4 @@ class SenderService(Service):
                     )
                 )
         LOGGER.info(f"File {filename} successfully transferred.")
+        self.outgoing.send(TransactionConclude(self.address, self.port, filename))
