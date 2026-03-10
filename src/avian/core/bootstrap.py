@@ -1,4 +1,5 @@
 import threading
+from pathlib import Path
 
 from avian.models.channel import Channel
 from avian.models.constants import LOGGER, PROTOCOL_PORT, SAVE_PATH
@@ -9,10 +10,13 @@ from avian.services.service import Service
 
 
 class Bootstrap(threading.Thread):
-    def __init__(self, incoming: Channel[Message], outgoing: Channel[Message]):
+    def __init__(
+        self, incoming: Channel[Message], outgoing: Channel[Message], run_path: Path
+    ) -> None:
         super().__init__()
         self.incoming = incoming
         self.outgoing = outgoing
+        self.run_path = run_path
 
     def run(self):
         # TODO: change hardcoded values to dynamic values from config

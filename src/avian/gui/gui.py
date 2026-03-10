@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+from pathlib import Path
 from typing import Callable, Optional
 
 from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
@@ -14,13 +15,19 @@ from avian.utils.numbers import fmt, fmt_bin
 
 
 class GUI(tk.Tk):
-    def __init__(self, incoming: Channel[Message], outgoing: Channel[Message]) -> None:
+    def __init__(
+        self, incoming: Channel[Message], outgoing: Channel[Message], run_path: Path
+    ) -> None:
         super().__init__()
 
         self.incoming = incoming
         self.outgoing = outgoing
+        self.run_path = run_path
 
         self.title("Avian - Peer-to-peer file transfers")
+        self.icon_path = self.run_path / "assets" / "app" / "icon.png"
+        self.icon = tk.PhotoImage(file=self.icon_path)
+        self.iconphoto(True, self.icon)
 
         self.geometry("1000x550")
         self.minsize(1000, 550)
