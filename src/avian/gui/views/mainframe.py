@@ -38,15 +38,13 @@ class Mainframe(tk.Frame):
         self.treeview.heading("Progress", text="Progress")
         self.treeview.heading("Status", text="Status")
         self.treeview.heading("Speed", text="Speed")
-        self.treeview.heading("Health", text="Health")
         self.treeview.heading("ETA", text="ETA")
 
-        self.treeview.column("#0", width=200)
-        self.treeview.column("Size", width=1)
+        self.treeview.column("#0", width=100)
+        self.treeview.column("Size", width=20)
         self.treeview.column("Progress", width=1)
         self.treeview.column("Status", width=1)
         self.treeview.column("Speed", width=1)
-        self.treeview.column("Health", width=1)
         self.treeview.column("ETA", width=1)
 
         self.treeview.grid(row=0, column=0, sticky="nsew")
@@ -70,7 +68,6 @@ class Mainframe(tk.Frame):
         progress: str,
         status: str,
         speed: str,
-        health: str,
         eta: str,
     ) -> None:
         key = f"{address}:{port}/{filename}"
@@ -79,13 +76,13 @@ class Mainframe(tk.Frame):
             self.treeview.item(
                 self.row_indices[key],
                 text=filename,
-                values=(size, progress, status, speed, health, eta),
+                values=(size, progress, status, speed, eta),
             )
         else:
             iid = self.treeview.insert(
                 "",
                 "end",
                 text=filename,
-                values=(size, progress, status, speed, health, eta),
+                values=(size, progress, status, speed, eta),
             )
             self.row_indices[key] = iid

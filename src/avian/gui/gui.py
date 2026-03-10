@@ -77,7 +77,6 @@ class GUI(tk.Tk):
             f"{progress:.2%}",
             "status",
             fmt_bin(speed, "B/s"),
-            "health",
             f"{eta:.2f}s",
         )
 
