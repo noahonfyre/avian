@@ -1,5 +1,7 @@
 # Definition of Done
 
+Eine Liste von Akzeptanzkriterien, die erfüllt werden müssen, damit das Projekt den MVP Status erreicht hat.
+
 ## Pflichtkriterien
 
 - [ ] Der Code auf dem `master`-Branch läuft bei normaler Nutzung flüssig und ohne Fehler.
