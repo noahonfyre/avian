@@ -106,6 +106,7 @@ class ConnectionWindow(tk.Toplevel):
                 self.filenames,
             )
         )
+        self.destroy()
 
     def select_file(self):
         filetypes = {("All files", "*.*")}
