@@ -18,9 +18,9 @@ class Toolbar(tk.Frame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0)
 
-        self.configure(padx=5, pady=5)
+        self.configure(padx=2, pady=2)
 
-        self.connect_button = ttk.Button(self, text="Connection Window")
+        self.connect_button = ttk.Button(self, text="Connect")
         self.connect_button.grid(column=0, row=0, sticky="w")
         self.connect_button["command"] = lambda: ConnectionWindow(
             self, self.incoming, self.outgoing
