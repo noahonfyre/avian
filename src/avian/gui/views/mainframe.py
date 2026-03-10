@@ -22,7 +22,7 @@ class Mainframe(tk.Frame):
         self.columnconfigure(1)
 
         self.treeview = ttk.Treeview(
-            self, columns=("Size", "Progress", "Status", "Speed", "Health", "ETA")
+            self, columns=("Size", "Progress", "Status", "Speed", "ETA")
         )
         self.vertical_scrollbar = ttk.Scrollbar(
             self, orient="vertical", command=self.treeview.yview
