@@ -3,6 +3,7 @@ from tkinter import ttk
 from typing import Dict
 
 from avian.models.channel import Channel
+from avian.models.constants import LOGGER
 from avian.models.messages import Message
 
 
@@ -51,6 +52,14 @@ class Mainframe(tk.Frame):
         self.treeview.grid(row=0, column=0, sticky="nsew")
         self.vertical_scrollbar.grid(row=0, column=1, sticky="nsew")
         self.horizontal_scrollbar.grid(row=1, column=0, sticky="nsew")
+
+    def delete_info(self, address: str, port: int, filename: str):
+        key = f"{address}:{port}/{filename}"
+
+        if key in self.row_indices:
+            self.treeview.delete(self.row_indices[key])
+        else:
+            LOGGER.warning("Nothing to delete.")
 
     def upsert_info(
         self,
