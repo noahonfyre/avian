@@ -4,7 +4,13 @@ from typing import Callable, Optional
 
 from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
 from avian.models.channel import Channel
-from avian.models.messages import Message, Shutdown, TransactionUpdate
+from avian.models.messages import (
+    Message,
+    Shutdown,
+    TransactionConclude,
+    TransactionUpdate,
+)
+from avian.utils.numbers import fmt, fmt_bin
 
 
 class GUI(tk.Tk):
@@ -16,8 +22,8 @@ class GUI(tk.Tk):
 
         self.title("Avian - Peer-to-peer file transfers")
 
-        self.geometry("1200x650")
-        self.minsize(1200, 650)
+        self.geometry("1000x550")
+        self.minsize(1000, 550)
         self.protocol("WM_DELETE_WINDOW", self.destroy)
 
         self.rowconfigure(0)
@@ -54,6 +60,8 @@ class GUI(tk.Tk):
             # TODO: change if-elif branching to a more dynamic solution
             if isinstance(msg, TransactionUpdate):
                 self.handle_update_transactions(msg)
+            elif isinstance(msg, TransactionConclude):
+                self.handle_conclude_transactions(msg)
 
     def handle_update_transactions(self, msg: TransactionUpdate):
         progress = msg.bytes_transferred / msg.file_size
@@ -65,12 +73,18 @@ class GUI(tk.Tk):
             msg.address,
             msg.port,
             msg.filename,
-            f"{msg.bytes_transferred}B/{msg.file_size}B",
-            f"{progress * 100:.2f}%",
+            f"{fmt_bin(msg.bytes_transferred, 'B')}/{fmt_bin(msg.file_size, 'B')}",
+            f"{progress:.2%}",
             "status",
-            f"{speed:.2f}B/s",
+            fmt_bin(speed, "B/s"),
             "health",
             f"{eta:.2f}s",
+        )
+
+    def handle_conclude_transactions(self, msg: TransactionConclude) -> None:
+        self.after(
+            3000,
+            lambda: self.mainframe.delete_info(msg.address, msg.port, msg.filename),
         )
 
     def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
