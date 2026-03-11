@@ -51,7 +51,7 @@ class Mainframe(tk.Frame):
         self.vertical_scrollbar.grid(row=0, column=1, sticky="nsew")
         self.horizontal_scrollbar.grid(row=1, column=0, sticky="nsew")
 
-    def delete_info(self, address: str, port: int, filename: str):
+    def delete_item(self, address: str, port: int, filename: str):
         key = f"{address}:{port}/{filename}"
 
         if key in self.row_indices:
@@ -59,14 +59,13 @@ class Mainframe(tk.Frame):
         else:
             LOGGER.warning("Nothing to delete.")
 
-    def upsert_info(
+    def update_item(
         self,
         address: str,
         port: int,
         filename: str,
         size: str,
         progress: str,
-        status: str,
         speed: str,
         eta: str,
     ) -> None:
@@ -76,13 +75,13 @@ class Mainframe(tk.Frame):
             self.treeview.item(
                 self.row_indices[key],
                 text=filename,
-                values=(size, progress, status, speed, eta),
+                values=(size, progress, "", speed, eta),
             )
         else:
             iid = self.treeview.insert(
                 "",
                 "end",
                 text=filename,
-                values=(size, progress, status, speed, eta),
+                values=(size, progress, "", speed, eta),
             )
             self.row_indices[key] = iid
