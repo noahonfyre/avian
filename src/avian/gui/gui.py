@@ -3,7 +3,7 @@ import tkinter as tk
 from pathlib import Path
 from typing import Callable, Optional
 
-from avian.gui.views import Mainframe, Sidebar, Statistics, Toolbar
+from avian.gui.views import Mainframe, Statistics, Toolbar
 from avian.models.channel import Channel
 from avian.models.messages import (
     Message,
@@ -11,7 +11,7 @@ from avian.models.messages import (
     TransactionConclude,
     TransactionUpdate,
 )
-from avian.utils.numbers import fmt, fmt_bin
+from avian.utils.numbers import fmt_bin
 
 
 class GUI(tk.Tk):
@@ -42,11 +42,8 @@ class GUI(tk.Tk):
         self.toolbar = Toolbar(self, self.incoming, self.outgoing)
         self.toolbar.grid(row=0, column=0, columnspan=2, sticky="nsew")
 
-        self.sidebar = Sidebar(self, self.incoming, self.outgoing)
-        self.sidebar.grid(row=1, column=0, sticky="nsew")
-
         self.mainframe = Mainframe(self, self.incoming, self.outgoing)
-        self.mainframe.grid(row=1, column=1, sticky="nsew")
+        self.mainframe.grid(row=1, column=1, columnspan=2, sticky="nsew")
 
         self.statistics = Statistics(self, self.incoming, self.outgoing)
         self.statistics.grid(row=2, column=0, columnspan=2, sticky="nsew")
@@ -76,21 +73,20 @@ class GUI(tk.Tk):
         remaining = msg.file_size - msg.bytes_transferred
         eta = remaining / speed
 
-        self.mainframe.upsert_info(
+        self.mainframe.update_item(
             msg.address,
             msg.port,
             msg.filename,
             f"{fmt_bin(msg.bytes_transferred, 'B')}/{fmt_bin(msg.file_size, 'B')}",
             f"{progress:.2%}",
-            "status",
             fmt_bin(speed, "B/s"),
             f"{eta:.2f}s",
         )
 
     def handle_conclude_transactions(self, msg: TransactionConclude) -> None:
         self.after(
-            3000,
-            lambda: self.mainframe.delete_info(msg.address, msg.port, msg.filename),
+            30_000,
+            lambda: self.mainframe.delete_item(msg.address, msg.port, msg.filename),
         )
 
     def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
