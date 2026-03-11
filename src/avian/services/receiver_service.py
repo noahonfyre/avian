@@ -62,9 +62,11 @@ class ReceiverService(Service):
 
         while self.file_count > 0:
             file: Path = self.receive_file(conn, addr)
+
             LOGGER.info("Getting file hash...")
             file_hash: bytes = struct.unpack("!32s", recv(conn))[0]
             LOGGER.info("Checking file integrity...")
+            # TODO: update status
             verified: bool = verify_file_hash(file, file_hash)
             if not verified:
                 LOGGER.warning("File integrity check failed.")
@@ -73,6 +75,7 @@ class ReceiverService(Service):
 
             LOGGER.info("File integrity check successful.")
             send(conn, ACK)
+            self.outgoing.send(TransactionConclude(addr[0], addr[1], file.name))
             self.file_count -= 1
 
         LOGGER.info(f"Connection with {addr[0]}:{addr[1]} concluded.")
@@ -80,11 +83,15 @@ class ReceiverService(Service):
     def receive_file(self, conn: socket.socket, addr: Tuple[str, int]) -> Path:
         filename: str = recv(conn).decode()
         file_size: int = struct.unpack("!Q", recv(conn))[0]
+
         LOGGER.info(f"Starting transfer of {filename} ({file_size}B)...")
+        # TODO: update status
 
         destination: Path = self.save_path / Path(filename).name
+
         transferred = 0
         start = time.perf_counter()
+        last_updated = time.perf_counter()
 
         with open(destination, "wb") as file:
             while transferred < file_size:
@@ -94,6 +101,14 @@ class ReceiverService(Service):
                 file.write(chunk)
                 transferred += len(chunk)
                 elapsed = time.perf_counter() - start
+
+                update_elapsed = time.perf_counter() - last_updated
+
+                if update_elapsed < 0.05:
+                    continue
+
+                last_updated = time.perf_counter()
+
                 self.outgoing.send(
                     TransactionUpdate(
                         address=addr[0],
@@ -104,6 +119,15 @@ class ReceiverService(Service):
                         elapsed=elapsed,
                     )
                 )
+            self.outgoing.send(
+                TransactionUpdate(
+                    address=addr[0],
+                    port=addr[1],
+                    filename=filename,
+                    bytes_transferred=transferred,
+                    file_size=file_size,
+                    elapsed=elapsed,
+                )
+            )
         LOGGER.info(f"File {filename} saved in {destination}.")
-        self.outgoing.send(TransactionConclude(addr[0], addr[1], filename))
         return destination
