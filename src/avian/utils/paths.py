@@ -1,12 +1,25 @@
 import platform
+import subprocess
 from pathlib import Path
 
+from avian.models.constants import ID
 
-def app_dir(app_name: str) -> Path:
+
+def resolve_app_path() -> Path:
     match platform.system():
         case "Windows":
-            return Path.home() / "AppData" / "Roaming" / app_name
+            return Path.home() / f".{ID}"
         case "Darwin":
-            return Path.home() / "Library" / "Application Support" / app_name
+            return Path.home() / "Library" / "Application Support" / f".{ID}"
         case _:
-            return Path.home() / ".config" / app_name
+            return Path.home() / ".config" / f".{ID}"
+
+
+def open_folder(path: Path):
+    match platform.system():
+        case "Windows":
+            subprocess.Popen(["explorer", str(path)])
+        case "Darwin":
+            subprocess.Popen(["open", str(path)])
+        case _:
+            subprocess.Popen(["xdg-open", str(path)])
