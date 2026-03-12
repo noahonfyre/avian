@@ -39,7 +39,7 @@ class GUI(tk.Tk):
         self.columnconfigure(0)
         self.columnconfigure(1, weight=1)
 
-        self.toolbar = Toolbar(self, self.incoming, self.outgoing)
+        self.toolbar = Toolbar(self, self.incoming, self.outgoing, self.run_path)
         self.toolbar.grid(row=0, column=0, columnspan=2, sticky="nsew")
 
         self.mainframe = Mainframe(self, self.incoming, self.outgoing)
