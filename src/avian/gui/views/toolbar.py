@@ -4,7 +4,9 @@ from tkinter import ttk
 from avian.gui.windows.connection.window import ConnectionWindow
 from avian.gui.windows.settings.window import SettingsWindow
 from avian.models.channel import Channel
+from avian.models.constants import SAVE_PATH
 from avian.models.messages import Message
+from avian.utils.paths import open_folder
 
 
 class Toolbar(tk.Frame):
@@ -14,7 +16,7 @@ class Toolbar(tk.Frame):
         self.incoming = incoming
         self.outgoing = outgoing
 
-        self.columnconfigure(0, weight=1)
+        self.columnconfigure(0)
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0)
 
@@ -26,6 +28,11 @@ class Toolbar(tk.Frame):
             self, self.incoming, self.outgoing
         )
 
+        self.savedfiles_button = ttk.Button(self, text="saved Files")
+        self.savedfiles_button.grid(column=1, row=0, sticky="w")
+        self.savedfiles_button["command"] = lambda: open_folder(SAVE_PATH)   
+
+        
         self.settings_button = ttk.Button(self, text="Settings")
         self.settings_button.grid(column=1, row=0, sticky="e")
         self.settings_button["command"] = lambda: SettingsWindow(self)
