@@ -10,13 +10,10 @@ from avian.services.service import Service
 
 
 class Bootstrap(threading.Thread):
-    def __init__(
-        self, incoming: Channel[Message], outgoing: Channel[Message], run_path: Path
-    ) -> None:
+    def __init__(self, incoming: Channel[Message], outgoing: Channel[Message]) -> None:
         super().__init__()
         self.incoming = incoming
         self.outgoing = outgoing
-        self.run_path = run_path
 
     def run(self):
         # TODO: change hardcoded values to dynamic values from config
