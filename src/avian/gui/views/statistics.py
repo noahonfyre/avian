@@ -21,31 +21,29 @@ class Statistics(tk.Frame):
         self.rowconfigure(0)
 
         self.active_transactions = tk.IntVar()
-        self.active_peers = tk.IntVar()
 
-        self.active_connections = ttk.Label(
+        self.active_transaction_label = ttk.Label(
             self,
             textvariable=DynamicTemplate(
-                "{} active transaction(s) via {} peer(s)",
+                "{} active transaction(s)",
                 self.active_transactions,
-                self.active_peers,
             ),
         )
-        self.active_connections.grid(row=0, column=0, sticky="w")
+        self.active_transaction_label.grid(row=0, column=0, sticky="w")
 
         self.private_ip = tk.StringVar(value="127.0.0.1")
         self.public_ip = tk.StringVar(value="127.0.0.1")
 
-        self.address_display = ttk.Label(
+        self.address_label = ttk.Label(
             self,
             textvariable=DynamicTemplate("{} | {}", self.private_ip, self.public_ip),
         )
-        self.address_display.grid(row=0, column=1)
+        self.address_label.grid(row=0, column=1)
 
         self.downstream_speed = tk.DoubleVar()
         self.upstream_speed = tk.DoubleVar()
 
-        self.speed_display = ttk.Label(
+        self.speed_label = ttk.Label(
             self,
             textvariable=DynamicTemplate(
                 "Downstream: {:.2f} | Upstream: {:.2f}",
@@ -53,4 +51,4 @@ class Statistics(tk.Frame):
                 self.upstream_speed,
             ),
         )
-        self.speed_display.grid(row=0, column=2, sticky="e")
+        self.speed_label.grid(row=0, column=2, sticky="e")
