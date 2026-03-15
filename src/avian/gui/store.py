@@ -1,4 +1,3 @@
-import tkinter as tk
 from collections import defaultdict
 from typing import Optional
 
@@ -23,9 +22,6 @@ class Transaction:
 
 class TransactionStore:
     transactions: defaultdict[str, Transaction] = defaultdict(Transaction)
-    transaction_count_var = tk.IntVar()
-    downstream_var = tk.IntVar()
-    upstream_var = tk.IntVar()
 
     @classmethod
     def get_transaction_count(cls) -> int:
