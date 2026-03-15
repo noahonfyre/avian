@@ -18,7 +18,7 @@ class SettingsWindow(tk.Toplevel):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
-        self.notebook = ttk.Notebook(self, padding=5)
+        self.notebook = ttk.Notebook(self)
         self.notebook.grid(row=0, column=0, sticky="nsew")
 
         self.notebook.add(GeneralTab(self.notebook), text="General")
