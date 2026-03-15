@@ -17,7 +17,6 @@ class Mainframe(tk.Frame):
         self.outgoing = outgoing
 
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1)
 
@@ -49,7 +48,6 @@ class Mainframe(tk.Frame):
 
         self.treeview.grid(row=0, column=0, sticky="nsew")
         self.vertical_scrollbar.grid(row=0, column=1, sticky="nsew")
-        self.horizontal_scrollbar.grid(row=1, column=0, sticky="nsew")
 
     def delete_item(self, address: str, port: int, filename: str):
         key = f"{address}:{port}/{filename}"
@@ -60,14 +58,14 @@ class Mainframe(tk.Frame):
             LOGGER.warning("Nothing to delete.")
 
     def update_item(
-        self,
-        address: str,
-        port: int,
-        filename: str,
-        size: str,
-        progress: str,
-        speed: str,
-        eta: str,
+            self,
+            address: str,
+            port: int,
+            filename: str,
+            size: str,
+            progress: str,
+            speed: str,
+            eta: str,
     ) -> None:
         key = f"{address}:{port}/{filename}"
 
