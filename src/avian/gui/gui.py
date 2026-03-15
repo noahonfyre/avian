@@ -1,7 +1,7 @@
-import time
 import tkinter as tk
 from typing import Callable, Optional
 
+from avian.gui.store import TransactionStore
 from avian.gui.views import Mainframe, Statistics, Toolbar
 from avian.models.channel import Channel
 from avian.models.messages import (
@@ -11,7 +11,6 @@ from avian.models.messages import (
     TransactionUpdate,
 )
 from avian.models.resources import get_resource
-from avian.utils.numbers import fmt_bin
 
 
 class GUI(tk.Tk):
@@ -20,6 +19,8 @@ class GUI(tk.Tk):
 
         self.incoming = incoming
         self.outgoing = outgoing
+
+        self.store = TransactionStore()
 
         self.title("Avian - Peer-to-peer file transfers")
         self.icon = tk.PhotoImage(data=get_resource("icon.png").read_bytes())
@@ -50,7 +51,6 @@ class GUI(tk.Tk):
         self.outgoing.send(Shutdown())
 
     def consume_events(self) -> None:
-        start = time.perf_counter()
         while True:
             if self.incoming.is_empty():
                 break
@@ -64,20 +64,21 @@ class GUI(tk.Tk):
                 self.handle_conclude_transactions(msg)
 
     def handle_update_transactions(self, msg: TransactionUpdate):
+        key = f"{msg.address}:{msg.port}/{msg.filename}"
         progress = msg.bytes_transferred / msg.file_size
         speed = msg.bytes_transferred / msg.elapsed
         remaining = msg.file_size - msg.bytes_transferred
         eta = remaining / speed
 
-        self.mainframe.update_item(
-            msg.address,
-            msg.port,
-            msg.filename,
-            f"{fmt_bin(msg.bytes_transferred, 'B')}/{fmt_bin(msg.file_size, 'B')}",
-            f"{progress:.2%}",
-            fmt_bin(speed, "B/s"),
-            f"{eta:.2f}s",
-        )
+        self.store.transactions[key].address = msg.address
+        self.store.transactions[key].port = msg.port
+        self.store.transactions[key].filename = msg.filename
+        self.store.transactions[key].transferred = msg.bytes_transferred
+        self.store.transactions[key].size = msg.file_size
+        self.store.transactions[key].progress = progress
+        self.store.transactions[key].speed = speed
+        self.store.transactions[key].eta = eta
+        self.store.push_updates(self.mainframe)
 
     def handle_conclude_transactions(self, msg: TransactionConclude) -> None:
         self.after(
