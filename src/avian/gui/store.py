@@ -3,6 +3,7 @@ from typing import Optional
 
 from attr import dataclass
 
+from avian.gui.views import Statistics
 from avian.gui.views.mainframe import Mainframe
 from avian.utils.numbers import fmt_bin
 
@@ -22,6 +23,8 @@ class Transaction:
 
 class TransactionStore:
     transactions: defaultdict[str, Transaction] = defaultdict(Transaction)
+    public_ip: str = "127.0.0.1"
+    private_ip: str = "127.0.0.1"
 
     @classmethod
     def get_transaction_count(cls) -> int:
@@ -48,7 +51,7 @@ class TransactionStore:
         return i
 
     @classmethod
-    def push_updates(cls, mainframe: Mainframe) -> None:
+    def push_updates(cls, mainframe: Mainframe, statistics: Statistics) -> None:
         for value in cls.transactions.values():
             mainframe.update_item(
                 address=value.address or "",
@@ -59,3 +62,10 @@ class TransactionStore:
                 speed=fmt_bin(value.speed or 0, "B/s"),
                 eta=f"{value.eta or 0:.2f}s",
             )
+
+        statistics.active_transactions.set(cls.get_transaction_count())
+        statistics.downstream_speed.set(cls.get_downstream())
+        statistics.upstream_speed.set(cls.get_upstream())
+
+        statistics.private_ip.set(cls.private_ip)
+        statistics.public_ip.set(cls.public_ip)

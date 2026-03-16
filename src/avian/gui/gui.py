@@ -8,7 +8,7 @@ from avian.models.messages import (
     Message,
     Shutdown,
     TransactionConclude,
-    TransactionUpdate,
+    TransactionUpdate, ResolverUpdate,
 )
 from avian.models.resources import get_resource
 
@@ -62,6 +62,8 @@ class GUI(tk.Tk):
                 self.handle_update_transactions(msg)
             elif isinstance(msg, TransactionConclude):
                 self.handle_conclude_transactions(msg)
+            elif isinstance(msg, ResolverUpdate):
+                self.handle_update_resolver(msg)
 
     def handle_update_transactions(self, msg: TransactionUpdate):
         key = f"{msg.address}:{msg.port}/{msg.filename}"
@@ -78,13 +80,23 @@ class GUI(tk.Tk):
         self.store.transactions[key].progress = progress
         self.store.transactions[key].speed = speed
         self.store.transactions[key].eta = eta
-        self.store.push_updates(self.mainframe)
+        self.store.push_updates(self.mainframe, self.statistics)
 
     def handle_conclude_transactions(self, msg: TransactionConclude) -> None:
+        key = f"{msg.address}:{msg.port}/{msg.filename}"
+        self.store.transactions.pop(key)
         self.after(
-            30_000,
+            10_000,
             lambda: self.mainframe.delete_item(msg.address, msg.port, msg.filename),
         )
+        self.store.push_updates(self.mainframe, self.statistics)
+
+    def handle_update_resolver(self, msg: ResolverUpdate) -> None:
+        if msg.private:
+            self.store.private_ip = msg.private
+        if msg.public:
+            self.store.public_ip = msg.public
+        self.store.push_updates(self.mainframe, self.statistics)
 
     def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
         func()
