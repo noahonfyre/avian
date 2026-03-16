@@ -33,17 +33,9 @@ class Statistics(tk.Frame):
         )
         self.active_transaction_label.grid(row=0, column=0, sticky="w")
 
-        self.private_ip = tk.StringVar()
-        self.public_ip = tk.StringVar()
+        self.ip_addresses = tk.StringVar()
 
-        self.address_label = ttk.Label(
-            self,
-            textvariable=DynamicTemplate(
-                "{} | {}",
-                self.private_ip,
-                self.public_ip
-            ),
-        )
+        self.address_label = ttk.Label(self, textvariable=self.ip_addresses)
         self.address_label.grid(row=0, column=1)
 
         self.downstream_speed = tk.DoubleVar()

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Optional
+from typing import Optional, List
 
 from attr import dataclass
 
@@ -23,8 +23,7 @@ class Transaction:
 
 class TransactionStore:
     transactions: defaultdict[str, Transaction] = defaultdict(Transaction)
-    public_ip: str = "127.0.0.1"
-    private_ip: str = "127.0.0.1"
+    ip_addresses: List[str] = []
 
     @classmethod
     def get_transaction_count(cls) -> int:
@@ -67,5 +66,4 @@ class TransactionStore:
         statistics.downstream_speed.set(cls.get_downstream())
         statistics.upstream_speed.set(cls.get_upstream())
 
-        statistics.private_ip.set(cls.private_ip)
-        statistics.public_ip.set(cls.public_ip)
+        statistics.ip_addresses.set(" | ".join(cls.ip_addresses))

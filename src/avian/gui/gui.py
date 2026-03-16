@@ -93,9 +93,9 @@ class GUI(tk.Tk):
 
     def handle_update_resolver(self, msg: ResolverUpdate) -> None:
         if msg.private:
-            self.store.private_ip = msg.private
+            self.store.ip_addresses.append(msg.private)
         if msg.public:
-            self.store.public_ip = msg.public
+            self.store.ip_addresses.append(msg.public)
         self.store.push_updates(self.mainframe, self.statistics)
 
     def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
