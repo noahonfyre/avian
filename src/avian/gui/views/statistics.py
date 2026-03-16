@@ -2,8 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 
 from avian.gui.misc.dynamic_template import DynamicTemplate
+from avian.gui.misc.supplier_template import SupplierTemplate
 from avian.models.channel import Channel
 from avian.models.messages import Message
+from avian.utils.numbers import fmt_bin
 
 
 class Statistics(tk.Frame):
@@ -31,12 +33,16 @@ class Statistics(tk.Frame):
         )
         self.active_transaction_label.grid(row=0, column=0, sticky="w")
 
-        self.private_ip = tk.StringVar(value="127.0.0.1")
-        self.public_ip = tk.StringVar(value="127.0.0.1")
+        self.private_ip = tk.StringVar()
+        self.public_ip = tk.StringVar()
 
         self.address_label = ttk.Label(
             self,
-            textvariable=DynamicTemplate("{} | {}", self.private_ip, self.public_ip),
+            textvariable=DynamicTemplate(
+                "{} | {}",
+                self.private_ip,
+                self.public_ip
+            ),
         )
         self.address_label.grid(row=0, column=1)
 
@@ -45,8 +51,8 @@ class Statistics(tk.Frame):
 
         self.speed_label = ttk.Label(
             self,
-            textvariable=DynamicTemplate(
-                "Downstream: {:.2f} | Upstream: {:.2f}",
+            textvariable=SupplierTemplate(
+                lambda down, up: f"Downstream: {fmt_bin(down, 'B/s')} | Upstream: {fmt_bin(up, 'B/s')}",
                 self.downstream_speed,
                 self.upstream_speed,
             ),
