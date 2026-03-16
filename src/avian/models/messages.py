@@ -56,3 +56,9 @@ class TransactionConclude(Message):
     address: str
     port: int
     filename: str
+
+
+@dataclass(frozen=True)
+class ResolverUpdate(Message):
+    public: str
+    private: str
