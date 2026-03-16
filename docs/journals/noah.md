@@ -1,5 +1,25 @@
 # Forschungstagebuch von Noah
 
+* [Forschungstagebuch von Noah](#forschungstagebuch-von-noah)
+    * [29.10.2025](#29102025)
+    * [12.11.2025](#12112025)
+    * [19.11.2025](#19112025)
+    * [26.11.2025](#26112025)
+    * [03.12.2025](#03122025)
+    * [10.12.2025](#10122025)
+    * [22.12.2025](#22122025)
+    * [14.01.2026](#14012026)
+    * [21.01.2026](#21012026)
+        * [Shared Memory](#shared-memory)
+        * [Message Passing](#message-passing)
+        * [Weiterführende Lösungen](#weiterführende-lösungen)
+    * [05.02.2026](#05022026)
+    * [12.02.2026](#12022026)
+    * [26.02.2026](#26022026)
+    * [05.03.2026](#05032026)
+    * [13.03.2026](#13032026)
+    * [19.03.2026](#19032026)
+
 **\[ Nachtrag basierend auf Git-Historie \]**
 
 ## 29.10.2025
