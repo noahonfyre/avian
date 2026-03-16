@@ -11,5 +11,6 @@ PROTOCOL_PORT: int = 9250
 CHUNK_SIZE: int = 4096
 AVIAN_PATH: Path = resolve_app_path(ID)
 SAVE_PATH: Path = AVIAN_PATH / "saved"
+RESOLVER_TARGET = "https://api.ipify.org?format=json"
 
 LOGGER = logging.getLogger(ID)
