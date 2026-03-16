@@ -1,16 +1,5 @@
 # Forschungstagebuch von Noah
 
-* [Forschungstagebuch von Noah](#forschungstagebuch-von-noah)
-    * [29.10.2025](#29102025)
-    * [12.11.2025](#12112025)
-    * [19.11.2025](#19112025)
-    * [26.11.2025](#26112025)
-    * [03.12.2025](#03122025)
-    * [10.12.2025](#10122025)
-    * [22.12.2025](#22122025)
-    * [14.01.2026](#14012026)
-    * [21.01.2026](#21012026)
-
 **\[ Nachtrag basierend auf Git-Historie \]**
 
 ## 29.10.2025
@@ -168,7 +157,87 @@ Cross-Thread-Kommunikation genutzt:
 
 Heute habe ich die Struktur des Git-Repositories noch einmal überarbeitet, indem ich den `next`-Branch erstellt habe.
 Der `master`-Branch wird nur noch Stable-Versionen beinhalten, der neue `next`-Branch agiert hingegen als
-Development-Environment. Und mich final für den EventBus (High-Level Interface für Message Passing mittels Channels) als
-Lösung für die Thread Synchronization entschieden. Außerdem habe ich versucht, das Team trotz der
-Probleme mit dem Git Server zu organisieren und unsere nächsten Schritte bezüglich zeitlicher Planung festzustellen.
+Development-Environment. Und mich final für eine EventBus-ähnliche Implementierung (High-Level Interface für Message
+Passing mittels Channels) als Lösung für die Thread Synchronization entschieden. Außerdem habe ich versucht, das Team
+trotz der Probleme mit dem Git Server zu organisieren und unsere nächsten Schritte bezüglich zeitlicher Planung
+festzustellen.
 
+## 12.02.2026
+
+Heute habe ich mich wieder um das Warten der Module gekümmert und verschiedene alte Module, die wir nicht mehr benötigt
+haben, gelöscht. Außerdem habe ich die Implementierung des Thread-Safe-Channels finalisiert und den anderen bei ihren
+Problemen mit dem Loadingwindow und der Toolbar geholfen. Zudem habe ich unsere Dependencies upgegradet, um eine
+High-Severity CVE, [2026-26007](https://nvd.nist.gov/vuln/detail/CVE-2026-26007), zu beheben. Dabei habe ich
+gleichzeitig noch unseren Language Server und Linter auf die neuste Version upgegradet. Weiterführend habe ich weiter
+das Projekt aufgeräumt, indem ich einige ungenutzte Teile des Projektes zunächst gelöscht habe. Ebenso habe ich aus
+Kompatibilitätsgründen die minimale Python-Version des Projektes auf 3.11.0 geändert (vorher 3.14) und
+Interpreter-Versionsspezifisches Syntax und anderes angepasst, sowie die Jahreszahl in LICENSE angepasst. Ich habe auch
+verschiedene Scripts erstellt, um die App in verschiedenen Umgebungen schnell starten zu können und um einige
+Kompatibilitätsprobleme zu beheben.
+
+## 26.02.2026
+
+Heute habe ich mich letztendlich gegen die Nutzung von `trio` und somit Asynchroner Programmierung entschieden, da diese
+Konzepte das Projekt wahrscheinlich unnötig verkomplizieren und in die Länge ziehen. Deshalb habe ich auch zuerst alle
+damit zusammenhängenden Abhängigkeiten entfernt und eine weitere kleine Bibliothek hinzugefügt: Das `attrs` Paket bietet
+einige für uns nützliche Utils, für die Erstellung von Dataclasses. Dieses war in `trio` enthalten und bereits in Teilen
+der Codebase eingebaut. Außerdem habe ich heute die ersten `Message`-Klassen erstellt, die als Event fungieren sollen
+und zwischen Frontend und Backend für die Kommunikation benutzt werden sollen. Zudem habe ich `constants.py` als
+zentralen Speicherort von Konstanten wie der Protokollversion oder dem Logger erstellt sowie einige Helper-Funktionen
+für das Generieren und Verifizieren von Checksums erstellt. Heute habe ich ebenfalls mit der Netzwerk-Layer des
+Programms angefangen. Dazu habe ich zuerst einen einfachen TCP-Wrapper in `protocol.py` definiert, der das
+Streamorientierte Protokoll zu einem Paket-/Frameorientiertem Protokoll umfunktionieren soll. TCP ist für unseren Fall
+perfekt, da es nahezu überall Adaption hat, Reliability aufweist und Ordered Delivery unterstützt aber auch
+hauptsächlich, weil es Verbindungsorientiert ist, was bedeutet, dass unser Programm über die gleiche etablierte
+Verbindung einzelne Teile einer Datei schicken kann, ohne sich dabei um andere Faktoren wie Connection State,
+Out-of-Order-Delivery sowie Congestion- und Flow Control kümmern zu müssen.
+
+Zusätzlich zu den ersten Fortschritten im Bereich Netzwerk habe ich mit dem Service-System des Backends angefangen und
+dazu die abstrakte Basisklasse `Service` erstellt, von denen jeder Service, der in Zukunft erstellt wird, erben wird. Um
+die Funktionalität der Basisklasse und den dazugehörigen Funktionalitäten zu prüfen, habe ich außerdem mit der ersten
+Iteration des Receiver-Services angefangen.
+
+Zuletzt habe ich noch einige Fehler bezüglich Imports gefixt, darunter einige Circular Imports und mit dem Setup
+inkompatible Imports.
+
+## 05.03.2026
+
+Heute habe ich zunächst einige der Netzwerkkomponenten neu organisiert und den Receiver-Service komplettiert. Außerdem
+habe ich `constants.py` geändert und weitere Werte hinzugefügt. Zudem habe ich an der Entwicklung des Sender-Services
+angefangen und anschließend einige Aspekte, die ich bei der ersten Iteration des Receiver-Services vergessen hatte, von
+der neuen Sender Implementierung zu übernehmen. Zusätzlich habe ich durch die Fertigstellung beider Seiten die
+Möglichkeit, mein vorher definiertes Protokoll auf Fehler zu überprüfen, wobei ich auf den Fehler gestoßen bin, dass die
+`socket.recv(bufsize: int)` Methode nicht exact `bufsize` Bytes empfängt, sondern maximal. Dies habe ich mit der
+Implementierung einer `recv_exact(...)` Funktion behoben, die die empfangenen Bytes in einem internen Puffer speichert
+und erst zurückgibt, wenn die gegebene Anzahl an Bytes im Puffer vorhanden ist. Ebenso habe ich die Funktionalität
+eingebaut, Receiver und Sender über das Backend zu starten und die Implementierung des Channels umgeschrieben, um
+HOL-Blocking in Receiver und Sender durch das Erreichen der Puffergröße des Channels zu verhindern, indem ich die
+Puffergröße bei negativen Eingaben ignoriere und somit eine theoretisch unlimitierte Anzahl an Messages in dem Channel
+gespeichert werden können. Außerdem habe ich im Frontend mit der Event-Handler Funktionalität angefangen und die erste
+Iteration des Event-Consumers im Frontend festgelegt. Ich habe ebenso im Frontend den File Dialog implementiert und
+Enrico bei der Implementierung des groben Systems der Settings zugeschaut und geholfen sowie Luca einige Tipps zum
+Einsetzen von Einträgen in den TreeView im Mainframe gegeben. Danach hatten wir unsere Projektvorstellung. Zuletzt habe
+ich heute eine weitere Util-Klasse für das formattieren von Binär- und Dezimalzahlen mit Präfixen erstellt, die bspw.
+für die Geschwindigkeit und Dateigröße in der Mainframe Anzeige benötigt werden und den Event-Consumer im Frontend
+fertiggestellt und mit weiteren Event Handlern versehen, die Definition of Done dem Repository als Markdown-Datei
+überarbeitet hinzugefügt und das grundlegende Branding Material für das Programm erstellt sowie eine Helper-Funktion für
+das Öffnen von Ordnern hinzugefügt.
+
+## 13.03.2026
+
+Heute haben wir uns um einige kleinere Aspekte der App gekümmert, um organisatorisch Platz für das Backlog Refinement
+und das letzte Sprint Planning zu schaffen. Im Refinement habe ich hauptsächlich Tickets gelöscht, die unwichtig
+und/oder unrealistisch für den letzten Sprint sind und im Planning habe ich mit den anderen die letzten Tickets, die
+realistisch zu schaffen, oder für den letzten Sprint als absolut notwendig erachtet sind, erstellt. Dazu zählen auch die
+Aufgaben der anderen, die ich ihnen bereits vor dem Refinement/Planning gegeben habe: Enrico sollte weiterhin die
+Probleme an den Settings beheben, Dominik hat sich um einen Button gekümmert, der die heruntergeladenen Dateien öffnet
+und Luca hat an einem Spike gearbeitet, der die Möglichkeit der Implementierung von Icons in der gesamten App
+feststellen sollte. Der Spike hat sich als Erfolg bewiesen, da Luca zwei Icons zu dem _New Connection_-Button und dem
+_Settings_-Button hinzufügen konnte; beide davon in einer anderen Ausführung. Dafür hat Luca zuerst Platzhalter-Icons
+benutzt. Diese habe ich anschließend durch unsere eigenen Icons ersetzt und noch ein weiteres Icon zu dem von Dominik
+neu erstellten _Saves_-Button hinzugefügt. Ich habe derzeit an dem Updaten und Löschen von Items in Mainframe's TreeView
+gearbeitet und zwei Helper-Methoden dafür aufgestellt, eine Überschrift zu der Anhangsliste im `ConnectionWindow`
+hinzugefügt und einen Berechnungsfehler in Sender und Receiver behoben. Außerdem habe ich die Rate, in der Sender und
+Receiver ihre Updates senden, zeitlich limitiert.
+
+## 19.03.2026
