@@ -1,10 +1,10 @@
 import threading
-from pathlib import Path
 
 from avian.models.channel import Channel
-from avian.models.constants import LOGGER, PROTOCOL_PORT, SAVE_PATH
+from avian.models.constants import LOGGER, PROTOCOL_PORT, SAVE_PATH, RESOLVER_TARGET
 from avian.models.messages import Message, Shutdown, StartSender
 from avian.services.receiver_service import ReceiverService
+from avian.services.resolver_service import ResolverService
 from avian.services.sender_service import SenderService
 from avian.services.service import Service
 
@@ -20,6 +20,12 @@ class Bootstrap(threading.Thread):
         threading.Thread(
             target=run_service,
             args=(ReceiverService(self.outgoing, SAVE_PATH, PROTOCOL_PORT),),
+            daemon=True,
+        ).start()
+
+        threading.Thread(
+            target=run_service,
+            args=(ResolverService(self.outgoing, RESOLVER_TARGET),),
             daemon=True,
         ).start()
 
