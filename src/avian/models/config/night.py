@@ -66,3 +66,7 @@ class ConfigSpec(Generic[T]):
     def save(self):
         with open(self.path, "w") as file:
             json.dump(self.dataset, file)
+
+    def apply(self):
+        self.save()
+        self.load()
