@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import List
 
 from avian.models.channel import Channel
-from avian.models.constants import CHUNK_SIZE, LOGGER, PROTOCOL_VERSION
+from avian.models.config.config import Config
+from avian.models.constants import LOGGER, PROTOCOL_VERSION
 from avian.models.messages import (
     Message,
     RejectedConnection,
@@ -20,7 +21,7 @@ from avian.utils.hashing import calculate_hash
 
 class SenderService(Service):
     def __init__(
-        self, outgoing: Channel[Message], files: List[Path], address: str, port: int
+            self, outgoing: Channel[Message], files: List[Path], address: str, port: int
     ) -> None:
         self.outgoing: Channel[Message] = outgoing
         self.files: List[Path] = files
@@ -98,7 +99,7 @@ class SenderService(Service):
 
         with open(path, "rb") as file:
             while transferred < file_size:
-                chunk: bytes = file.read(CHUNK_SIZE)
+                chunk: bytes = file.read(Config.CHUNK_SIZE.get())
                 if not chunk:
                     break
                 send(conn, chunk)

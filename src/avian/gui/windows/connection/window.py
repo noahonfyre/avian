@@ -6,6 +6,7 @@ from typing import List, Literal, Tuple
 
 from avian.gui.windows.loading.window import LoadingWindow
 from avian.models.channel import Channel
+from avian.models.config.config import Config
 from avian.models.messages import Message, StartSender
 
 
@@ -65,7 +66,7 @@ class ConnectionWindow(tk.Toplevel):
         ttk.Label(self.compose_wrapper, text="Peer port").grid(
             row=0, column=1, sticky="w"
         )
-        self.target_port = tk.IntVar(value=9250)
+        self.target_port = tk.IntVar(value=Config.PROTOCOL_PORT.get())
         self.target_port_entry = ttk.Spinbox(
             self.compose_wrapper, from_=1, to=65536, textvariable=self.target_port
         )

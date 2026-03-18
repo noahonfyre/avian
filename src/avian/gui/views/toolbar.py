@@ -1,10 +1,11 @@
 import tkinter as tk
+from pathlib import Path
 from tkinter import ttk
 
 from avian.gui.windows.connection.window import ConnectionWindow
 from avian.gui.windows.settings.window import SettingsWindow
 from avian.models.channel import Channel
-from avian.models.constants import SAVE_PATH
+from avian.models.config.config import Config
 from avian.models.messages import Message
 from avian.models.resources import get_resource
 from avian.utils.paths import open_folder
@@ -51,7 +52,7 @@ class Toolbar(tk.Frame):
             self, text="Saves", image=self.icon_saves, compound="left"
         )
         self.saves_button.grid(column=1, row=0, sticky="w")
-        self.saves_button["command"] = lambda: open_folder(SAVE_PATH)
+        self.saves_button["command"] = lambda: open_folder(Path(Config.SAVE_PATH.get()))
 
         self.settings_button = ttk.Button(self, text="Settings")
         self.settings_button = ttk.Button(
