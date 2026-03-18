@@ -10,7 +10,7 @@ from avian.models.messages import (
     Message,
     TransactionConclude,
     TransactionStart,
-    TransactionUpdate,
+    TransactionUpdate, StatusUpdate,
 )
 from avian.models.network.protocol import ACK, NACK, recv, send
 from avian.services.service import Service
@@ -66,7 +66,7 @@ class ReceiverService(Service):
             LOGGER.info("Getting file hash...")
             file_hash: bytes = struct.unpack("!32s", recv(conn))[0]
             LOGGER.info("Checking file integrity...")
-            # TODO: update status
+            self.outgoing.send(StatusUpdate(addr[0], addr[1], file.name, "Verifying..."))
             verified: bool = verify_file_hash(file, file_hash)
             if not verified:
                 LOGGER.warning("File integrity check failed.")
@@ -85,7 +85,7 @@ class ReceiverService(Service):
         file_size: int = struct.unpack("!Q", recv(conn))[0]
 
         LOGGER.info(f"Starting transfer of {filename} ({file_size}B)...")
-        # TODO: update status
+        self.outgoing.send(StatusUpdate(addr[0], addr[1], filename, "Transferring..."))
 
         destination: Path = self.save_path / Path(filename).name
 
