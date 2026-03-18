@@ -52,6 +52,14 @@ class TransactionUpdate(Message):
 
 
 @dataclass(frozen=True)
+class StatusUpdate(Message):
+    address: str
+    port: int
+    filename: str
+    status: str
+
+
+@dataclass(frozen=True)
 class TransactionConclude(Message):
     address: str
     port: int
