@@ -64,6 +64,7 @@ class Mainframe(tk.Frame):
             filename: str,
             size: str,
             progress: str,
+            status: str,
             speed: str,
             eta: str,
     ) -> None:
@@ -73,13 +74,13 @@ class Mainframe(tk.Frame):
             self.treeview.item(
                 self.row_indices[key],
                 text=filename,
-                values=(size, progress, "", speed, eta),
+                values=(size, progress, status, speed, eta),
             )
         else:
             iid = self.treeview.insert(
                 "",
                 "end",
                 text=filename,
-                values=(size, progress, "", speed, eta),
+                values=(size, progress, status, speed, eta),
             )
             self.row_indices[key] = iid
