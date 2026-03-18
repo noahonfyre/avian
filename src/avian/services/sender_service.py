@@ -77,6 +77,7 @@ class SenderService(Service):
                     LOGGER.warning(f"Integrity check failed for {file.name}, aborting.")
                     return
 
+                self.outgoing.send(StatusUpdate(self.address, self.port, file.name, "Finished!"))
                 self.outgoing.send(
                     TransactionConclude(self.address, self.port, file.name)
                 )

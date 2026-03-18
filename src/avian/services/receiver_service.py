@@ -75,6 +75,7 @@ class ReceiverService(Service):
 
             LOGGER.info("File integrity check successful.")
             send(conn, ACK)
+            self.outgoing.send(StatusUpdate(addr[0], addr[1], file.name, "Finished!"))
             self.outgoing.send(TransactionConclude(addr[0], addr[1], file.name))
             self.file_count -= 1
 
