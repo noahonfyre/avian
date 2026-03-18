@@ -35,6 +35,7 @@ def main() -> None:
     except Exception as e:
         # TODO: add better error handling
         traceback.print_exception(type(e), e, e.__traceback__)
+        shutdown(-1, None)
 
     shutdown(0, None)
 
@@ -45,6 +46,9 @@ def shutdown(signum: int, _) -> None:
 
     event_channel.close()
     command_channel.close()
+
+    if signum == 0:
+        Config.SPEC.save()
 
     sys.exit(signum)
 
