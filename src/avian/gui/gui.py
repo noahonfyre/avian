@@ -88,7 +88,7 @@ class GUI(tk.Tk):
         key = f"{msg.address}:{msg.port}/{msg.filename}"
         self.store.transactions.pop(key)
         self.after(
-            10_000,
+            5_000,
             lambda: self.mainframe.delete_item(msg.address, msg.port, msg.filename),
         )
         self.store.push_updates(self.mainframe, self.statistics)
