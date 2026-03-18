@@ -12,7 +12,7 @@ from avian.models.messages import (
     RejectedConnection,
     TransactionConclude,
     TransactionStart,
-    TransactionUpdate,
+    TransactionUpdate, StatusUpdate,
 )
 from avian.models.network.protocol import ACK, recv, send
 from avian.services.service import Service
@@ -63,13 +63,13 @@ class SenderService(Service):
 
             for file in self.files:
                 LOGGER.info(f"Calculating file hash of file {file.name}...")
-                # TODO: update status
+                self.outgoing.send(StatusUpdate(self.address, self.port, file.name, "Calculating hash..."))
                 file_hash: bytes = calculate_hash(file)
 
                 self.send_file(sock, file)
 
                 LOGGER.info("Sending file hash for checksum verification...")
-                # TODO: update status
+                self.outgoing.send(StatusUpdate(self.address, self.port, file.name, "Verifying..."))
 
                 send(sock, struct.pack("!32s", file_hash))
 
@@ -91,7 +91,7 @@ class SenderService(Service):
         send(conn, struct.pack("!Q", file_size))
 
         LOGGER.info(f"Starting transfer of {filename} ({file_size}B)...")
-        # TODO: update status
+        self.outgoing.send(StatusUpdate(self.address, self.port, filename, "Transferring..."))
 
         transferred = 0
         start = time.perf_counter()
