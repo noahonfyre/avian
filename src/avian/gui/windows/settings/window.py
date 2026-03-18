@@ -10,8 +10,8 @@ class SettingsWindow(tk.Toplevel):
         super().__init__(parent)
 
         self.title("Settings")
-        self.geometry("600x350")
-        self.minsize(600, 350)
+        self.geometry("400x450")
+        self.minsize(400, 450)
         self.transient(parent)
         self.grab_set()
 
