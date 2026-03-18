@@ -58,6 +58,7 @@ class TransactionStore:
                 filename=value.filename or "",
                 size=f"{fmt_bin(value.transferred or 0, 'B')}/{fmt_bin(value.size or 0, 'B')}",
                 progress=f"{value.progress or 0:.2%}",
+                status=value.status or "",
                 speed=fmt_bin(value.speed or 0, "B/s"),
                 eta=f"{value.eta or 0:.2f}s",
             )
