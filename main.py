@@ -6,6 +6,7 @@ import traceback
 from avian.core.bootstrap import Bootstrap
 from avian.gui.gui import GUI
 from avian.models.channel import Channel
+from avian.models.config.config import Config
 from avian.models.constants import ID, LOGGER, VERSION
 from avian.models.messages import Message
 
@@ -21,6 +22,8 @@ def main() -> None:
     )
 
     LOGGER.info(f"Initializing {ID} v{VERSION}...")
+
+    Config.register()
 
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
