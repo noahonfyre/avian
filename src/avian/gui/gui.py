@@ -8,7 +8,7 @@ from avian.models.messages import (
     Message,
     Shutdown,
     TransactionConclude,
-    TransactionUpdate, ResolverUpdate,
+    TransactionUpdate, ResolverUpdate, StatusUpdate,
 )
 from avian.models.resources import get_resource
 
@@ -62,6 +62,8 @@ class GUI(tk.Tk):
                 self.handle_update_transactions(msg)
             elif isinstance(msg, TransactionConclude):
                 self.handle_conclude_transactions(msg)
+            elif isinstance(msg, StatusUpdate):
+                self.handle_update_status(msg)
             elif isinstance(msg, ResolverUpdate):
                 self.handle_update_resolver(msg)
 
@@ -89,6 +91,16 @@ class GUI(tk.Tk):
             10_000,
             lambda: self.mainframe.delete_item(msg.address, msg.port, msg.filename),
         )
+        self.store.push_updates(self.mainframe, self.statistics)
+
+    def handle_update_status(self, msg: StatusUpdate) -> None:
+        key = f"{msg.address}:{msg.port}/{msg.filename}"
+        print(key)
+
+        self.store.transactions[key].address = msg.address
+        self.store.transactions[key].port = msg.port
+        self.store.transactions[key].filename = msg.filename
+        self.store.transactions[key].status = msg.status
         self.store.push_updates(self.mainframe, self.statistics)
 
     def handle_update_resolver(self, msg: ResolverUpdate) -> None:
