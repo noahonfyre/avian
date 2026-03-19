@@ -47,5 +47,13 @@ class SettingsWindow(tk.Toplevel):
         self.general = GeneralSection(self)
         self.general.grid(column=1, row=0, sticky="nsew", padx=5)
 
-        self.save_button = ttk.Button(self, text="Save", command=self.general.apply_config)
-        self.save_button.grid(column=1, row=1, sticky="se", padx=5, pady=5)
+        
+
+        self.button_wrapper = ttk.Frame(self)
+        self.button_wrapper.grid(column=1, row=1, padx=5, pady=5, sticky="nse")
+        
+        self.save_button = ttk.Button(self.button_wrapper, text="Save", command=self.general.apply_config)
+        self.save_button.grid(column=1, row=1, sticky="se")
+
+        self.close_button = ttk.Button(self.button_wrapper, text="Close", command=self.destroy)
+        self.close_button.grid(column=0, row=1, sticky="se")
