@@ -54,6 +54,7 @@ class Mainframe(tk.Frame):
 
         if key in self.row_indices:
             self.treeview.delete(self.row_indices[key])
+            self.row_indices.pop(key)
         else:
             LOGGER.warning("Nothing to delete.")
 
