@@ -261,3 +261,9 @@ hinzugefügt und einen Berechnungsfehler in Sender und Receiver behoben. Außerd
 Receiver ihre Updates senden, zeitlich limitiert.
 
 ## 19.03.2026
+
+Heute habe ich endlich das fertige Config-System mitsamt Validierung, Reloading und Type-Preservation implementiert und
+dementsprechend alte Werte, die in `constants.py` festgehalten wurden, zu der neuen Config umgeschrieben. Zudem habe ich
+die Oberfläche der Settings abgeändert und fertiggestellt sowie die Funktionalität des Config-Systems direkt damit
+verbunden. Ich habe außerdem die letzte Spalte der Mainframe-Tabelle, den Status, fertiggestellt und das Backend
+entsprechend daraufhin angepasst.

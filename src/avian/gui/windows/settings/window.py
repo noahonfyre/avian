@@ -36,7 +36,7 @@ class SettingsWindow(tk.Toplevel):
 
         self.tagline_label = ttk.Label(
             self.overview,
-            text="Here is a placeholder of the tagline of the application",
+            text="Peer-to-peer file tranfers, as simple and effective as they can be.",
             wraplength=128,
         )
         self.tagline_label.grid()
