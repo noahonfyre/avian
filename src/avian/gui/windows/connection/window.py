@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.filedialog as fd
 from pathlib import Path
 from tkinter import ttk
-from typing import List, Literal, Tuple
+from typing import Callable, List, Literal, Tuple
 
 from avian.gui.windows.loading.window import LoadingWindow
 from avian.models.channel import Channel
@@ -13,6 +13,8 @@ from avian.models.messages import Message, StartSender
 class ConnectionWindow(tk.Toplevel):
     def __init__(self, parent, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(parent)
+
+        self.selected_name: str = ""
 
         self.filenames: List[Path] = []
         self.incoming = incoming
@@ -81,7 +83,7 @@ class ConnectionWindow(tk.Toplevel):
         self.add_button.grid(column=0, row=0, sticky="w")
 
         self.remove_button = ttk.Button(
-            self.file_pane, text="Remove", state=tk.DISABLED
+            self.file_pane, text="Remove", command=self.remove_selection
         )
         self.remove_button.grid(column=1, row=0, sticky="w")
 
@@ -98,8 +100,23 @@ class ConnectionWindow(tk.Toplevel):
         )
         self.connect_button.grid(column=1, row=0, sticky="e")
 
-    def connect(self):
-        LoadingWindow(self)
+        self.file_list.bind("<ButtonRelease-1>", lambda *_: self.handle_item_select())
+
+    def handle_item_select(self):
+        item = self.file_list.focus()
+        self.selected_name = item
+
+    def remove_selection(self):
+        if self.selected_name == "":
+            return
+        self.file_list.delete(self.selected_name)
+
+    
+    def update_remove_button(self):
+        if self.file_list
+        
+
+    def connect(self):        
         self.outgoing.send(
             StartSender(
                 self.target_address.get(),
