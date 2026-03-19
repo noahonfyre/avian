@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
 
@@ -47,6 +48,7 @@ class ConfigSpec(Generic[T]):
 
     def load(self):
         if not self.path.exists():
+            os.makedirs(self.path.parent, exist_ok=True)
             self.save()
 
         with open(self.path, "r") as file:
