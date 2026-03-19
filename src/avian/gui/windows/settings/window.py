@@ -47,8 +47,6 @@ class SettingsWindow(tk.Toplevel):
         self.general = GeneralSection(self)
         self.general.grid(column=1, row=0, sticky="nsew", padx=5)
 
-        
-
         self.button_wrapper = ttk.Frame(self)
         self.button_wrapper.grid(column=1, row=1, padx=5, pady=5, sticky="nse")
         
