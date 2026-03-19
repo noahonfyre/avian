@@ -66,6 +66,7 @@ class GeneralSection(ttk.LabelFrame):
         Config.SAVE_PATH.set(self.save_location_var.get())
 
         Config.SPEC.apply()
+        self.master.destroy()
 
     def select_folder(self) -> None:
         raw_folder: str = fd.askdirectory(initialdir=Path(Config.SAVE_PATH.get()), title="Add files")
