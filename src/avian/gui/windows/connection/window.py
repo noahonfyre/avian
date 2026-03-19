@@ -2,9 +2,8 @@ import tkinter as tk
 import tkinter.filedialog as fd
 from pathlib import Path
 from tkinter import ttk
-from typing import Callable, List, Literal, Tuple
+from typing import List, Literal, Tuple
 
-from avian.gui.windows.loading.window import LoadingWindow
 from avian.models.channel import Channel
 from avian.models.config.config import Config
 from avian.models.messages import Message, StartSender
@@ -111,12 +110,11 @@ class ConnectionWindow(tk.Toplevel):
             return
         self.file_list.delete(self.selected_name)
 
-    
     def update_remove_button(self):
-        if self.file_list
-        
+        if self.file_list:
+            pass
 
-    def connect(self):        
+    def connect(self):
         self.outgoing.send(
             StartSender(
                 self.target_address.get(),
