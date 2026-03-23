@@ -7,6 +7,10 @@ T = TypeVar("T")
 
 
 class ConfigField(Generic[T]):
+    """
+
+    """
+
     def __init__(
             self,
             key: str,
@@ -37,16 +41,28 @@ class ConfigReference(Generic[T]):
 
 
 class ConfigSpec(Generic[T]):
+    """
+    The wrapper of a config.
+    Provides functionality for loading and saving the data structure to the file and defining fields.
+    """
+
     def __init__(self, path: Path):
         self.path: Path = path
         self.fields: Dict[str, ConfigField] = {}
         self.dataset: Dict[str, Any] = {}
 
     def define(self, field: ConfigField[T]) -> ConfigReference[T]:
+        """
+        Define a config field
+        """
         self.fields[field.key] = field
         return ConfigReference(field.key, self)
 
     def load(self):
+        """
+        Loads the data of the file at `self.path`, parses it, validates it and applies it to the internal value.
+        """
+
         if not self.path.exists():
             os.makedirs(self.path.parent, exist_ok=True)
             self.save()
@@ -66,6 +82,10 @@ class ConfigSpec(Generic[T]):
                 self.dataset[key] = value
 
     def save(self):
+        """
+        Saves the internal data to the file at `self.path`.
+        """
+
         with open(self.path, "w") as file:
             json.dump(self.dataset, file)
 

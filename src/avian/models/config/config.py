@@ -3,6 +3,11 @@ from avian.models.constants import AVIAN_PATH, LOGGER
 
 
 class Config:
+    """
+    The application config.
+    Has to be accessed as a class, not as an instance.
+    """
+
     SPEC = ConfigSpec(AVIAN_PATH / "config.json")
 
     PROTOCOL_PORT = SPEC.define(ConfigField("protocol_port", 9250, lambda i: 1024 < i < 65_536))
