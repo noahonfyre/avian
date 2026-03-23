@@ -12,6 +12,11 @@ from avian.services.service import Service
 
 
 class Bootstrap(threading.Thread):
+    """
+    The secondary application thread for orchestrating threads.
+    Also carries the backend event loop.
+    """
+
     def __init__(self, incoming: Channel[Message], outgoing: Channel[Message]) -> None:
         super().__init__()
         self.incoming = incoming
@@ -52,4 +57,8 @@ class Bootstrap(threading.Thread):
 
 
 def run_service(service: Service) -> None:
+    """
+    Helper function for starting services via thread targets more organized.
+    """
+
     service.run()
