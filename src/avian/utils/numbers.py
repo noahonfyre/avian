@@ -11,14 +11,20 @@ class Prefix:
 
 
 def fmt(value: int | float, unit: str) -> str:
+    """
+    Returns the formatted string with the given unit and decimal prefix.
+    """
     prefix = get_prefix(value)
-    scaled: int = value / (10**prefix.exponent)
+    scaled: int = value / (10 ** prefix.exponent)
     return f"{scaled:.2f}{prefix.symbol}{unit}"
 
 
 def fmt_bin(value: int | float, unit: str) -> str:
+    """
+    Returns the formatted string with the given unit and binary prefix.
+    """
     prefix = get_bin_prefix(value)
-    scaled: int = value / (2**prefix.exponent)
+    scaled: int = value / (2 ** prefix.exponent)
     return f"{scaled:.2f}{prefix.symbol}{unit}"
 
 
@@ -39,6 +45,9 @@ class DecimalPrefixes(Enum):
 
 
 def get_prefix(value: int | float) -> Prefix:
+    """
+    Returns the best decimal prefix for `value`.
+    """
     if value == 0:
         return DecimalPrefixes.BASE.value
 
@@ -51,6 +60,9 @@ def get_prefix(value: int | float) -> Prefix:
 
 
 def get_bin_prefix(value: int | float) -> Prefix:
+    """
+    Returns the best binary prefix for `value`.
+    """
     if value == 0:
         return BinaryPrefixes.BASE.value
 
