@@ -10,6 +10,10 @@ from avian.models.messages import Message, StartSender
 
 
 class ConnectionWindow(tk.Toplevel):
+    """
+    Provides functionality for initiating a transaction such as selecting files and entering the peer address and port.
+    """
+
     def __init__(self, parent, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(parent)
 

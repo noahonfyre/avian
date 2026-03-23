@@ -3,6 +3,10 @@ from tkinter import ttk
 
 
 class SettingsOption(tk.Frame):
+    """
+    A helper class for defining an option with an associated label easily.
+    """
+
     def __init__(self, master, text: str):
         super().__init__(master)
 

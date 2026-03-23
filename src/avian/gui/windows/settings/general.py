@@ -8,6 +8,10 @@ from avian.models.config.config import Config
 
 
 class GeneralSection(ttk.LabelFrame):
+    """
+    Settings section carrying general or important settings.
+    """
+
     def __init__(self, master):
         super().__init__(master, text="General")
 

@@ -8,6 +8,10 @@ from avian.models.messages import Message
 
 
 class Mainframe(tk.Frame):
+    """
+    Provides information of transaction progress.
+    """
+
     def __init__(self, master, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(master)
 
@@ -50,6 +54,10 @@ class Mainframe(tk.Frame):
         self.vertical_scrollbar.grid(row=0, column=1, sticky="nsew")
 
     def delete_item(self, address: str, port: int, filename: str):
+        """
+        Helper method for deleting an item as well as its associated row index.
+        """
+
         key = f"{address}:{port}/{filename}"
 
         if key in self.row_indices:
@@ -69,6 +77,11 @@ class Mainframe(tk.Frame):
             speed: str,
             eta: str,
     ) -> None:
+        """
+        Helper method for creating and updating new entries.
+        Automatically handles row indices as needed.
+        """
+
         key = f"{address}:{port}/{filename}"
 
         if key in self.row_indices:

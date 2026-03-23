@@ -22,15 +22,25 @@ class Transaction:
 
 
 class TransactionStore:
+    """
+    A class for storing application/transaction data.
+    """
+
     transactions: defaultdict[str, Transaction] = defaultdict(Transaction)
     ip_addresses: List[str] = []
 
     @classmethod
     def get_transaction_count(cls) -> int:
+        """
+        Returns the total number of transactions registered.
+        """
         return len(cls.transactions.values())
 
     @classmethod
     def get_downstream(cls) -> int:
+        """
+        Returns the speed of all downstream transactions in bytes per second.
+        """
         i = 0
         for transaction in cls.transactions.values():
             if not transaction.speed:
@@ -41,6 +51,9 @@ class TransactionStore:
 
     @classmethod
     def get_upstream(cls) -> int:
+        """
+        Returns the speed of all upstream transactions in bytes per second.
+        """
         i = 0
         for transaction in cls.transactions.values():
             if not transaction.speed:
@@ -51,6 +64,10 @@ class TransactionStore:
 
     @classmethod
     def push_updates(cls, mainframe: Mainframe, statistics: Statistics) -> None:
+        """
+        Applies the values stored internally to the defined locations in `mainframe` and `statistics`.
+        """
+
         for value in cls.transactions.values():
             mainframe.update_item(
                 address=value.address or "",

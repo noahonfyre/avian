@@ -9,6 +9,10 @@ from avian.utils.numbers import fmt_bin
 
 
 class Statistics(tk.Frame):
+    """
+    Provides information of cross-transaction statistics and general application metrics.
+    """
+
     def __init__(self, master, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(master)
 

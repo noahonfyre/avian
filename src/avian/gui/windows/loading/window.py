@@ -4,6 +4,10 @@ from tkinter import ttk
 
 
 class LoadingWindow(tk.Toplevel):
+    """
+    Currently unused part for showing the progress of the connection before the transaction is truly initiated.
+    """
+
     def __init__(self, parent):
         super().__init__(parent)
         self.geometry("250x100")

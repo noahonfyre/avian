@@ -7,6 +7,10 @@ from avian.models.resources import get_resource
 
 
 class SettingsWindow(tk.Toplevel):
+    """
+    Provides an interface for tweaking application settings.
+    """
+
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -36,7 +40,7 @@ class SettingsWindow(tk.Toplevel):
 
         self.tagline_label = ttk.Label(
             self.overview,
-            text="Peer-to-peer file tranfers, as simple and effective as they can be.",
+            text="Peer-to-peer file transfers, as simple and effective as they can be.",
             wraplength=128,
         )
         self.tagline_label.grid()
@@ -49,7 +53,7 @@ class SettingsWindow(tk.Toplevel):
 
         self.button_wrapper = ttk.Frame(self)
         self.button_wrapper.grid(column=1, row=1, padx=5, pady=5, sticky="nse")
-        
+
         self.save_button = ttk.Button(self.button_wrapper, text="Save", command=self.general.apply_config)
         self.save_button.grid(column=1, row=1, sticky="se")
 

@@ -12,6 +12,10 @@ from avian.utils.paths import open_folder
 
 
 class Toolbar(tk.Frame):
+    """
+    Provides the main way of interaction with the application.
+    """
+
     def __init__(self, master, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(master)
 

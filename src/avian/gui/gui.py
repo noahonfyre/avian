@@ -14,6 +14,11 @@ from avian.models.resources import get_resource
 
 
 class GUI(tk.Tk):
+    """
+    The main window of the program.
+    Handles frontend initialization and carries the frontend event loop.
+    """
+
     def __init__(self, incoming: Channel[Message], outgoing: Channel[Message]) -> None:
         super().__init__()
 
@@ -46,11 +51,20 @@ class GUI(tk.Tk):
         self.statistics.grid(row=2, column=0, columnspan=2, sticky="nsew")
 
     def run(self) -> None:
+        """
+        Initiate the frontend event loop and run the tkinter mainloop.
+        This method is also responsible for handling graceful shutdown.
+        """
+
         self.schedule(20, self.consume_events)
         self.mainloop()
         self.outgoing.send(Shutdown())
 
     def consume_events(self) -> None:
+        """
+        Consume all events in the `self.incoming` channel and handle them appropriately.
+        """
+
         while True:
             if self.incoming.is_empty():
                 break
@@ -68,6 +82,9 @@ class GUI(tk.Tk):
                 self.handle_update_resolver(msg)
 
     def handle_update_transactions(self, msg: TransactionUpdate):
+        """
+        Handle events of type `TransactionUpdate`.
+        """
         key = f"{msg.address}:{msg.port}/{msg.filename}"
         progress = msg.bytes_transferred / msg.file_size
         speed = msg.bytes_transferred / msg.elapsed
@@ -85,6 +102,9 @@ class GUI(tk.Tk):
         self.store.push_updates(self.mainframe, self.statistics)
 
     def handle_conclude_transactions(self, msg: TransactionConclude) -> None:
+        """
+        Handle events of type `TransactionConclude`.
+        """
         key = f"{msg.address}:{msg.port}/{msg.filename}"
         self.store.transactions.pop(key)
         self.after(
@@ -94,6 +114,9 @@ class GUI(tk.Tk):
         self.store.push_updates(self.mainframe, self.statistics)
 
     def handle_update_status(self, msg: StatusUpdate) -> None:
+        """
+        Handle events of type `StatusUpdate`.
+        """
         key = f"{msg.address}:{msg.port}/{msg.filename}"
         print(key)
 
@@ -104,6 +127,9 @@ class GUI(tk.Tk):
         self.store.push_updates(self.mainframe, self.statistics)
 
     def handle_update_resolver(self, msg: ResolverUpdate) -> None:
+        """
+        Handle events of type `ResolverUpdate`.
+        """
         if msg.private:
             self.store.ip_addresses.append(msg.private)
         if msg.public:
@@ -111,5 +137,8 @@ class GUI(tk.Tk):
         self.store.push_updates(self.mainframe, self.statistics)
 
     def schedule(self, interval_ms: int, func: Callable[[], None]) -> None:
+        """
+        Helper method for continuously registering the given function `func` to be invoked every `interval_ms` milliseconds by the mainloop.
+        """
         func()
         self.after(interval_ms, self.schedule, interval_ms, func)
