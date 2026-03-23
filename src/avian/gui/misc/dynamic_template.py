@@ -2,6 +2,10 @@ import tkinter as tk
 
 
 class DynamicTemplate(tk.StringVar):
+    """
+    A helper class to apply multiple tkinter variables to one format string.
+    """
+
     def __init__(self, template: str, *args: tk.Variable):
         super().__init__()
         self.template = template

@@ -3,6 +3,10 @@ from typing import Callable
 
 
 class SupplierTemplate(tk.StringVar):
+    """
+    A helper class that dynamically recomputes the output on variable update based on the variable values.
+    """
+
     def __init__(self, template: Callable[[...], str], *args: tk.Variable):
         super().__init__()
         self.template = template
