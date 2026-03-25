@@ -9,11 +9,20 @@ from avian.services.service import Service
 
 
 class ResolverService(Service):
+    """
+    Service for resolving private and public IP addresses.
+    Accuracy of the resolved public address can vary based on network configuration and setup.
+    Takes in the channel `outgoing` to which updates will be posted and the `resolver_target` HTTP address to which the request will be sent.
+    """
+
     def __init__(self, outgoing: Channel[Message], resolver_target: str) -> None:
         self.outgoing: Channel[Message] = outgoing
         self.resolver_target: str = resolver_target
 
     def run(self):
+        """
+        Run the service which will resolve the private and public IP addresses and send a `ResolverUpdate` message to `self.outgoing`.
+        """
         LOGGER.info("Resolving private IP address...")
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.connect(("192.0.2.1", 80))

@@ -18,6 +18,11 @@ from avian.utils.hashing import verify_file_hash
 
 
 class ReceiverService(Service):
+    """
+    Service for receiving files via the custom protocol.
+    Takes in the channel `outgoing` to which updates will be posted, the path `save_path` where the files will be saved and the port number `port` on which the listener will be initialized.
+    """
+
     def __init__(self, outgoing: Channel[Message], save_path: Path, port: int) -> None:
         self.outgoing: Channel[Message] = outgoing
         self.save_path: Path = save_path
@@ -25,6 +30,10 @@ class ReceiverService(Service):
         self.file_count: int = 0
 
     def run(self) -> None:
+        """
+        Executes the setup logic for reception of files, creating missing folders and initializing the socket.
+        Also runs the loop for accepting the connections and passing them onto the `self.handle_connection` method.
+        """
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             LOGGER.info("Initializing receiver service...")
             if not self.save_path.exists():
@@ -44,6 +53,10 @@ class ReceiverService(Service):
                     LOGGER.warning(f"Failed to handle {addr[0]}:{addr[1]}: {e}")
 
     def handle_connection(self, conn: socket.socket, addr: Tuple[str, int]) -> None:
+        """
+        Handles one connection, executing the custom handshake and iterate over files to receive.
+        This method also handles file integrity checks and sends updates via `self.outgoing`
+        """
         LOGGER.info(f"Incoming connection: {addr[0]}:{addr[1]}")
 
         LOGGER.info("Checking peer version...")
@@ -82,6 +95,10 @@ class ReceiverService(Service):
         LOGGER.info(f"Connection with {addr[0]}:{addr[1]} concluded.")
 
     def receive_file(self, conn: socket.socket, addr: Tuple[str, int]) -> Path:
+        """
+        Receives a single file from the connection `conn` and writes it to the file system in chunks.
+        Also sends progress updates periodically to `self.outgoing`.
+        """
         filename: str = recv(conn).decode()
         file_size: int = struct.unpack("!Q", recv(conn))[0]
 

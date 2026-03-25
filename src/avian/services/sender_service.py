@@ -20,6 +20,11 @@ from avian.utils.hashing import calculate_hash
 
 
 class SenderService(Service):
+    """
+    Service for sending files via the custom protocol.
+    Takes in the channel `outgoing` to which updates will be posted, the list of files `files` which will be sent as well as the IP address `address` port number `port` which will be used to initialize the socket.
+    """
+
     def __init__(
             self, outgoing: Channel[Message], files: List[Path], address: str, port: int
     ) -> None:
@@ -30,6 +35,10 @@ class SenderService(Service):
         self.file_count: int = len(self.files)
 
     def run(self) -> None:
+        """
+        Executes the setup logic for sending of files, initializing the socket and handles the custom handshake.
+        This method also handles file integrity checks and sends updates via `self.outgoing`
+        """
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             LOGGER.info("Initializing sender service...")
 
@@ -86,6 +95,10 @@ class SenderService(Service):
             LOGGER.info("Concluding sender service...")
 
     def send_file(self, conn: socket.socket, path: Path) -> None:
+        """
+        Reads the local file at `path` in chunks and sends this single file to the connection `conn`.
+        Also sends progress updates periodically to `self.outgoing`.
+        """
         filename: str = path.name
         send(conn, filename.encode())
         file_size: int = path.stat().st_size
