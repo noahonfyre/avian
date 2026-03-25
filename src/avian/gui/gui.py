@@ -118,7 +118,6 @@ class GUI(tk.Tk):
         Handle events of type `StatusUpdate`.
         """
         key = f"{msg.address}:{msg.port}/{msg.filename}"
-        print(key)
 
         self.store.transactions[key].address = msg.address
         self.store.transactions[key].port = msg.port
