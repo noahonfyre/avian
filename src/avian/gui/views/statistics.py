@@ -48,7 +48,9 @@ class Statistics(tk.Frame):
         self.speed_label = ttk.Label(
             self,
             textvariable=SupplierTemplate(
-                lambda down, up: f"Downstream: {fmt_bin(down, 'B/s')} | Upstream: {fmt_bin(up, 'B/s')}",
+                lambda down, up: (
+                    f"Downstream: {fmt_bin(down, 'B/s')} | Upstream: {fmt_bin(up, 'B/s')}"
+                ),
                 self.downstream_speed,
                 self.upstream_speed,
             ),

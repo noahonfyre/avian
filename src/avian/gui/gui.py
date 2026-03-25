@@ -8,7 +8,9 @@ from avian.models.messages import (
     Message,
     Shutdown,
     TransactionConclude,
-    TransactionUpdate, ResolverUpdate, StatusUpdate,
+    TransactionUpdate,
+    ResolverUpdate,
+    StatusUpdate,
 )
 from avian.models.resources import get_resource
 

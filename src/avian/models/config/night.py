@@ -8,7 +8,7 @@ T = TypeVar("T")
 
 class ConfigField(Generic[T]):
     """
-
+    A wrapper for defining updatable fields with the `ConfigSpec` object.
     """
 
     def __init__(

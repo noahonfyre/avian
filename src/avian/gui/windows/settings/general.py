@@ -29,7 +29,7 @@ class GeneralSection(ttk.LabelFrame):
         self.protocol_port_spinbox = ttk.Spinbox(
             self.protocol_port_option.wrapper,
             to=65_536,
-            textvariable=self.protocol_port_var
+            textvariable=self.protocol_port_var,
         )
         self.protocol_port_spinbox.grid(sticky="nswe")
 
@@ -40,8 +40,9 @@ class GeneralSection(ttk.LabelFrame):
 
         self.chunk_size_spinbox = ttk.Spinbox(
             self.chunk_size_option.wrapper,
-            increment=1024, to=0xFFFFFF,
-            textvariable=self.chunk_size_var
+            increment=1024,
+            to=0xFFFFFF,
+            textvariable=self.chunk_size_var,
         )
         self.chunk_size_spinbox.grid(sticky="nswe")
 
@@ -53,14 +54,14 @@ class GeneralSection(ttk.LabelFrame):
         self.save_location_display = ttk.Entry(
             self.save_location_option.wrapper,
             textvariable=self.save_location_var,
-            state="disabled"
+            state="disabled",
         )
         self.save_location_display.grid(column=0, row=0, sticky="nswe")
 
         self.save_location_browse_button = ttk.Button(
             self.save_location_option.wrapper,
             text="Select...",
-            command=self.select_folder
+            command=self.select_folder,
         )
         self.save_location_browse_button.grid(column=1, row=0, sticky="nswe")
 
@@ -73,6 +74,8 @@ class GeneralSection(ttk.LabelFrame):
         self.master.destroy()
 
     def select_folder(self) -> None:
-        raw_folder: str = fd.askdirectory(initialdir=Path(Config.SAVE_PATH.get()), title="Add files")
+        raw_folder: str = fd.askdirectory(
+            initialdir=Path(Config.SAVE_PATH.get()), title="Add files"
+        )
 
         self.save_location_var.set(raw_folder)

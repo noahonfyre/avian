@@ -67,15 +67,15 @@ class Mainframe(tk.Frame):
             LOGGER.warning("Nothing to delete.")
 
     def update_item(
-            self,
-            address: str,
-            port: int,
-            filename: str,
-            size: str,
-            progress: str,
-            status: str,
-            speed: str,
-            eta: str,
+        self,
+        address: str,
+        port: int,
+        filename: str,
+        size: str,
+        progress: str,
+        status: str,
+        speed: str,
+        eta: str,
     ) -> None:
         """
         Helper method for creating and updating new entries.

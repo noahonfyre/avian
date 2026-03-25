@@ -25,7 +25,13 @@ class Bootstrap(threading.Thread):
     def run(self):
         threading.Thread(
             target=run_service,
-            args=(ReceiverService(self.outgoing, Path(Config.SAVE_PATH.get()), Config.PROTOCOL_PORT.get()),),
+            args=(
+                ReceiverService(
+                    self.outgoing,
+                    Path(Config.SAVE_PATH.get()),
+                    Config.PROTOCOL_PORT.get(),
+                ),
+            ),
             daemon=True,
         ).start()
 

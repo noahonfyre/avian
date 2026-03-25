@@ -12,7 +12,8 @@ from avian.models.messages import (
     RejectedConnection,
     TransactionConclude,
     TransactionStart,
-    TransactionUpdate, StatusUpdate,
+    TransactionUpdate,
+    StatusUpdate,
 )
 from avian.models.network.protocol import ACK, recv, send
 from avian.services.service import Service
@@ -26,7 +27,7 @@ class SenderService(Service):
     """
 
     def __init__(
-            self, outgoing: Channel[Message], files: List[Path], address: str, port: int
+        self, outgoing: Channel[Message], files: List[Path], address: str, port: int
     ) -> None:
         self.outgoing: Channel[Message] = outgoing
         self.files: List[Path] = files
@@ -72,13 +73,19 @@ class SenderService(Service):
 
             for file in self.files:
                 LOGGER.info(f"Calculating file hash of file {file.name}...")
-                self.outgoing.send(StatusUpdate(self.address, self.port, file.name, "Calculating hash..."))
+                self.outgoing.send(
+                    StatusUpdate(
+                        self.address, self.port, file.name, "Calculating hash..."
+                    )
+                )
                 file_hash: bytes = calculate_hash(file)
 
                 self.send_file(sock, file)
 
                 LOGGER.info("Sending file hash for checksum verification...")
-                self.outgoing.send(StatusUpdate(self.address, self.port, file.name, "Verifying..."))
+                self.outgoing.send(
+                    StatusUpdate(self.address, self.port, file.name, "Verifying...")
+                )
 
                 send(sock, struct.pack("!32s", file_hash))
 
@@ -86,7 +93,9 @@ class SenderService(Service):
                     LOGGER.warning(f"Integrity check failed for {file.name}, aborting.")
                     return
 
-                self.outgoing.send(StatusUpdate(self.address, self.port, file.name, "Finished!"))
+                self.outgoing.send(
+                    StatusUpdate(self.address, self.port, file.name, "Finished!")
+                )
                 self.outgoing.send(
                     TransactionConclude(self.address, self.port, file.name)
                 )
@@ -105,7 +114,9 @@ class SenderService(Service):
         send(conn, struct.pack("!Q", file_size))
 
         LOGGER.info(f"Starting transfer of {filename} ({file_size}B)...")
-        self.outgoing.send(StatusUpdate(self.address, self.port, filename, "Transferring..."))
+        self.outgoing.send(
+            StatusUpdate(self.address, self.port, filename, "Transferring...")
+        )
 
         transferred = 0
         start = time.perf_counter()
