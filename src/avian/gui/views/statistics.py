@@ -1,66 +1,58 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.avian.gui.misc.dynamic_template import DynamicTemplate
+from avian.gui.misc.dynamic_template import DynamicTemplate
+from avian.gui.misc.supplier_template import SupplierTemplate
+from avian.models.channel import Channel
+from avian.models.messages import Message
+from avian.utils.numbers import fmt_bin
 
 
 class Statistics(tk.Frame):
-    def __init__(self, master: tk.Tk):
+    """
+    Provides information of cross-transaction statistics and general application metrics.
+    """
+
+    def __init__(self, master, incoming: Channel[Message], outgoing: Channel[Message]):
         super().__init__(master)
+
+        self.incoming = incoming
+        self.outgoing = outgoing
+
         self.configure(padx=10, pady=5)
 
-        # Für Luca: (Bitte Kommentare nach Ausführung löschen)
-        # Nur beim ersten und dritten column konfigurieren, das mittlere soll den rest des platzes für sich beanspruchen
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
         self.columnconfigure(2, weight=1)
         self.rowconfigure(0)
 
-        # Alles hierunter umwandeln zu drei labels (keine wrapper mehr); bitte variablen und templates stehen lassen
-        # Die drei label elemente ihrer jeweiligen column zuweisen und sticky-wert angeben (Tipp: mittleres Element muss nicht sticky sein)
-        #
-        # Für das neue, mittlere label zwei neue Variablen (beide StringVar) erstellen, eine für die private ip, eine für die public ip
-        # Durch "|" getrennt in dem label erscheinen lassen (Tipp: Benutze `DynamicTemplate` und gebe einen template string an)
-        
         self.active_transactions = tk.IntVar()
-        self.active_peers = tk.IntVar()
-        
-        self.active_connections = ttk.Label(
+
+        self.active_transaction_label = ttk.Label(
             self,
-            textvariable=DynamicTemplate("{} active transaction(s) via {} peer(s)", self.active_transactions, self.active_peers)
+            textvariable=DynamicTemplate(
+                "{} active transaction(s)",
+                self.active_transactions,
+            ),
         )
-        self.active_connections.grid(
-            row=0,
-            column=0,
-            sticky="w"
-        )
+        self.active_transaction_label.grid(row=0, column=0, sticky="w")
 
-        self.address_display = ttk.Label(
-        self,
-        text="hallo"
-        )
+        self.ip_addresses = tk.StringVar()
 
-        self.address_display.grid(
-            row=0,
-            column=1,
-            
-
-        )
-
-
-
-
-
-
-        
+        self.address_label = ttk.Label(self, textvariable=self.ip_addresses)
+        self.address_label.grid(row=0, column=1)
 
         self.downstream_speed = tk.DoubleVar()
         self.upstream_speed = tk.DoubleVar()
 
-        self.speed_display = ttk.Label(
+        self.speed_label = ttk.Label(
             self,
-            textvariable=DynamicTemplate(
-                "Downstream: {:.2f} | Upstream: {:.2f}",
-                self.downstream_speed, self.upstream_speed
-            )
-        ).grid(row=0, column=2, sticky="e")
+            textvariable=SupplierTemplate(
+                lambda down, up: (
+                    f"Downstream: {fmt_bin(down, 'B/s')} | Upstream: {fmt_bin(up, 'B/s')}"
+                ),
+                self.downstream_speed,
+                self.upstream_speed,
+            ),
+        )
+        self.speed_label.grid(row=0, column=2, sticky="e")

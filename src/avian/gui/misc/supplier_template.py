@@ -1,12 +1,13 @@
 import tkinter as tk
+from typing import Callable
 
 
-class DynamicTemplate(tk.StringVar):
+class SupplierTemplate(tk.StringVar):
     """
-    A helper class to apply multiple tkinter variables to one format string.
+    A helper class that dynamically recomputes the output on variable update based on the variable values.
     """
 
-    def __init__(self, template: str, *args: tk.Variable):
+    def __init__(self, template: Callable[[...], str], *args: tk.Variable):
         super().__init__()
         self.template = template
         self.args = args
@@ -18,4 +19,4 @@ class DynamicTemplate(tk.StringVar):
 
     def update(self, *_):
         values = [a.get() for a in self.args]
-        self.set(self.template.format(*values))
+        self.set(self.template(*values))

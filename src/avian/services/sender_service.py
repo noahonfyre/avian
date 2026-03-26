@@ -1,0 +1,161 @@
+import socket
+import struct
+import time
+from pathlib import Path
+from typing import List
+
+from avian.models.channel import Channel
+from avian.models.config.config import Config
+from avian.models.constants import LOGGER, PROTOCOL_VERSION
+from avian.models.messages import (
+    Message,
+    RejectedConnection,
+    TransactionConclude,
+    TransactionStart,
+    TransactionUpdate,
+    StatusUpdate,
+)
+from avian.models.network.protocol import ACK, recv, send
+from avian.services.service import Service
+from avian.utils.hashing import calculate_hash
+
+
+class SenderService(Service):
+    """
+    Service for sending files via the custom protocol.
+    Takes in the channel `outgoing` to which updates will be posted, the list of files `files` which will be sent as well as the IP address `address` port number `port` which will be used to initialize the socket.
+    """
+
+    def __init__(
+        self, outgoing: Channel[Message], files: List[Path], address: str, port: int
+    ) -> None:
+        self.outgoing: Channel[Message] = outgoing
+        self.files: List[Path] = files
+        self.address: str = address
+        self.port: int = port
+        self.file_count: int = len(self.files)
+
+    def run(self) -> None:
+        """
+        Executes the setup logic for sending of files, initializing the socket and handles the custom handshake.
+        This method also handles file integrity checks and sends updates via `self.outgoing`
+        """
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            LOGGER.info("Initializing sender service...")
+
+            LOGGER.info(f"Connecting {self.address}:{self.port}...")
+            sock.connect((self.address, self.port))
+
+            LOGGER.info("Transferring version...")
+            send(sock, struct.pack("!I", PROTOCOL_VERSION))
+
+            if recv(sock) != ACK:
+                LOGGER.warning(
+                    f"Connection rejected from {self.address}:{self.port} due to version mismatch."
+                )
+                self.outgoing.send(
+                    RejectedConnection(
+                        self.address,
+                        self.port,
+                        f"Connection rejected from {self.address}:{self.port} due to version mismatch.",
+                    )
+                )
+                return
+
+            LOGGER.info("Version match! Continuing...")
+
+            send(sock, struct.pack("!I", self.file_count))
+            self.outgoing.send(
+                TransactionStart(
+                    address=self.address, port=self.port, file_count=self.file_count
+                )
+            )
+
+            for file in self.files:
+                LOGGER.info(f"Calculating file hash of file {file.name}...")
+                self.outgoing.send(
+                    StatusUpdate(
+                        self.address, self.port, file.name, "Calculating hash..."
+                    )
+                )
+                file_hash: bytes = calculate_hash(file)
+
+                self.send_file(sock, file)
+
+                LOGGER.info("Sending file hash for checksum verification...")
+                self.outgoing.send(
+                    StatusUpdate(self.address, self.port, file.name, "Verifying...")
+                )
+
+                send(sock, struct.pack("!32s", file_hash))
+
+                if recv(sock) != ACK:
+                    LOGGER.warning(f"Integrity check failed for {file.name}, aborting.")
+                    return
+
+                self.outgoing.send(
+                    StatusUpdate(self.address, self.port, file.name, "Finished!")
+                )
+                self.outgoing.send(
+                    TransactionConclude(self.address, self.port, file.name)
+                )
+
+            LOGGER.info(f"Connection with {self.address}:{self.port} concluded.")
+            LOGGER.info("Concluding sender service...")
+
+    def send_file(self, conn: socket.socket, path: Path) -> None:
+        """
+        Reads the local file at `path` in chunks and sends this single file to the connection `conn`.
+        Also sends progress updates periodically to `self.outgoing`.
+        """
+        filename: str = path.name
+        send(conn, filename.encode())
+        file_size: int = path.stat().st_size
+        send(conn, struct.pack("!Q", file_size))
+
+        LOGGER.info(f"Starting transfer of {filename} ({file_size}B)...")
+        self.outgoing.send(
+            StatusUpdate(self.address, self.port, filename, "Transferring...")
+        )
+
+        transferred = 0
+        start = time.perf_counter()
+        last_updated = time.perf_counter()
+
+        with open(path, "rb") as file:
+            while transferred < file_size:
+                chunk: bytes = file.read(Config.CHUNK_SIZE.get())
+                if not chunk:
+                    break
+                send(conn, chunk)
+                transferred += len(chunk)
+                elapsed = time.perf_counter() - start
+
+                update_elapsed = time.perf_counter() - last_updated
+
+                if update_elapsed < 0.05:
+                    continue
+
+                last_updated = time.perf_counter()
+
+                self.outgoing.send(
+                    TransactionUpdate(
+                        address=self.address,
+                        port=self.port,
+                        filename=filename,
+                        bytes_transferred=transferred,
+                        file_size=file_size,
+                        elapsed=elapsed,
+                    )
+                )
+            self.outgoing.send(
+                TransactionUpdate(
+                    address=self.address,
+                    port=self.port,
+                    filename=filename,
+                    bytes_transferred=transferred,
+                    file_size=file_size,
+                    elapsed=elapsed,
+                )
+            )
+        LOGGER.info(f"File {filename} successfully transferred.")
