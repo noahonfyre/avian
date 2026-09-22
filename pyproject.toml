@@ -1,0 +1,32 @@
+[project]
+name = "avian"
+version = "0.1.0"
+description = "Peer-to-peer file transfers, as simple and effective as they can be."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">= 3.11"
+
+dependencies = [
+    "attrs>=26.1.0",
+    "ruff>=0.15.7",
+    "ty>=0.0.25",
+]
+
+authors = [
+    { name = "Noah Zeisberg" }
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.7",
+    "ty>=0.0.25",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"avian.assets" = ["*.png", "icon/*.png"]
