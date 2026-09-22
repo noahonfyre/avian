@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Optional, List
+from typing import List, Optional
 
 from attr import dataclass
 
@@ -17,7 +17,7 @@ class Transaction:
     size: Optional[int] = None
     progress: Optional[float] = None
     status: Optional[str] = None
-    speed: Optional[int] = None
+    speed: Optional[float] = None
     eta: Optional[float] = None
 
 
@@ -37,7 +37,7 @@ class TransactionStore:
         return len(cls.transactions.values())
 
     @classmethod
-    def get_downstream(cls) -> int:
+    def get_downstream(cls) -> float:
         """
         Returns the speed of all downstream transactions in bytes per second.
         """
@@ -50,7 +50,7 @@ class TransactionStore:
         return i
 
     @classmethod
-    def get_upstream(cls) -> int:
+    def get_upstream(cls) -> float:
         """
         Returns the speed of all upstream transactions in bytes per second.
         """
